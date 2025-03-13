@@ -45,7 +45,7 @@ export function ProductForm({
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-4 overflow-y-auto"
+        className="flex flex-col gap-4 h-full pl-4"
         id={id}
         onSubmit={form.handleSubmit(onSubmit)}
       >
@@ -95,7 +95,6 @@ export function ProductForm({
           )}
         />
         <Separator className="my-4" />
-
         <ProductCalculator form={form} />
       </form>
     </Form>

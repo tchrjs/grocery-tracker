@@ -38,15 +38,17 @@ export function ProductDrawer() {
           <DrawerTitle>Add product</DrawerTitle>
           <DrawerDescription>Add details to new product.</DrawerDescription>
         </DrawerHeader>
-        <div className="px-4">
-          <ProductForm
-            id={formId}
-            onSubmit={(e) => {
-              setOpen(false);
-            }}
-          />
+        <div className="w-full h-full overflow-hidden">
+          <div className="w-full h-full box-content pr-4 overflow-y-auto">
+            <ProductForm
+              id={formId}
+              onSubmit={(e) => {
+                setOpen(false);
+              }}
+            />
+          </div>
         </div>
-        <DrawerFooter>
+        <DrawerFooter className="mb-2">
           <Button variant={"default"} type={"submit"} form={formId}>
             Submit
           </Button>
