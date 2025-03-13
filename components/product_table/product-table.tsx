@@ -4,14 +4,13 @@ import { Product } from "./product";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { ProductSearchInput } from "./product-search-input";
 import { useState } from "react";
-import { Button } from "../ui/button";
+import { ProductDrawer } from "../product_drawer/product-drawer";
 
 export function ProductTable({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
@@ -25,13 +24,13 @@ export function ProductTable({ products }: { products: Product[] }) {
             setSelectedProduct(selected_product);
           }}
         />
-        <Button variant={"secondary"}>Add Product</Button>
+        <ProductDrawer />
       </div>
       <Table className="text-center">
         <TableHeader>
           <TableRow>
             <TableHead>Store</TableHead>
-            <TableHead>Total</TableHead>
+            <TableHead>Price</TableHead>
             <TableHead>Unit</TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Quality</TableHead>

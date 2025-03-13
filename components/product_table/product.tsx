@@ -4,13 +4,11 @@ import { RatingRange, StarRating } from "./star-rating";
 export interface Product {
   name: string;
   store: string;
-  total: number;
+  total_price: number;
+  unit_price: number;
+  measurement: any;
   quantity: number;
   quality: RatingRange;
-  unit: {
-    price: number;
-    type: string;
-  };
   date: Date;
 }
 
@@ -18,11 +16,11 @@ export function Product({ product }: { product: Product }) {
   return (
     <TableRow>
       <TableCell>{product.store}</TableCell>
-      <TableCell>{`$${product.total.toFixed(2)}`}</TableCell>
-      <TableCell>{`$${product.unit.price.toFixed(2)}/${
-        product.unit.type
+      <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
+      <TableCell>{`$${product.unit_price.toFixed(2)}/${
+        product.measurement
       }`}</TableCell>
-      <TableCell>{`${product.quantity} ${product.unit.type}`}</TableCell>
+      <TableCell>{`${product.quantity} ${product.measurement}`}</TableCell>
       <TableCell>
         <StarRating value={product.quality} />
       </TableCell>
@@ -34,21 +32,19 @@ export function Product({ product }: { product: Product }) {
 export function createProduct(
   name: string,
   store: string,
-  total: number,
+  total_price: number,
   quantity: number,
-  unit_type: string,
+  measurement: any,
   quality: RatingRange
 ): Product {
   let newProduct: Product = {
     name: name,
     store: store,
-    total: total,
+    total_price: total_price,
+    unit_price: total_price / quantity,
+    measurement: measurement,
     quantity: quantity,
     quality: quality,
-    unit: {
-      price: total / quantity,
-      type: unit_type,
-    },
     date: new Date(),
   };
   return newProduct;

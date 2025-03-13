@@ -9,7 +9,7 @@ export function StarRating({ value = 0 }) {
         <Star
           key={i}
           className={`w-3 h-3 ${
-            i < value ? "text-white fill-white" : "text-white"
+            i < value ? "text-foreground fill-foreground" : "text-foreground"
           }`}
         />
       ))}
