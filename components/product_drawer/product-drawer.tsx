@@ -48,7 +48,7 @@ export function ProductDrawer() {
             />
           </div>
         </div>
-        <DrawerFooter className="mb-2">
+        <DrawerFooter className="mb-4">
           <Button variant={"default"} type={"submit"} form={formId}>
             Submit
           </Button>

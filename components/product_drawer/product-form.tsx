@@ -45,7 +45,7 @@ export function ProductForm({
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-4 h-full pl-4"
+        className="flex flex-col gap-4 h-full px-4"
         id={id}
         onSubmit={form.handleSubmit(onSubmit)}
       >
