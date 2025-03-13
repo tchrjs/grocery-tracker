@@ -11,6 +11,7 @@ import {
 import { ProductSearchInput } from "./product-search-input";
 import { useState } from "react";
 import { ProductDrawer } from "../product_drawer/product-drawer";
+import { Separator } from "../ui/separator";
 
 export function ProductTable({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);

@@ -16,7 +16,15 @@ export function ProductDrawer() {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Drawer direction="right" dismissible={false} open={open}>
+    <Drawer
+      direction="right"
+      dismissible={true}
+      handleOnly={true}
+      open={open}
+      onOpenChange={(isOpened) => {
+        if (isOpened !== open) setOpen(isOpened);
+      }}
+    >
       <Button
         variant={"outline"}
         onClick={() => {
@@ -30,7 +38,7 @@ export function ProductDrawer() {
           <DrawerTitle>Add product</DrawerTitle>
           <DrawerDescription>Add details to new product.</DrawerDescription>
         </DrawerHeader>
-        <div className="p-4 overflow-y-auto">
+        <div className="px-4">
           <ProductForm
             id={formId}
             onSubmit={(e) => {
