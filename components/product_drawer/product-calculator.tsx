@@ -44,7 +44,7 @@ export function ProductCalculator(form: any) {
       <TabsContent value="total">
         <Card>
           <CardHeader>
-            <CardTitle>Calculate Quantity</CardTitle>
+            <CardTitle>Calculate Total</CardTitle>
             <CardDescription>
               <span className="text-sm italic">
                 Unit Price * Quantity = Total
