@@ -1,7 +1,6 @@
 import {
   Drawer,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -9,6 +8,7 @@ import {
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { ProductForm } from "./product-form";
+import { ArrowLeft } from "lucide-react";
 
 const formId: string = "product-form";
 
@@ -34,12 +34,21 @@ export function ProductDrawer() {
         Add product
       </Button>
       <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Add product</DrawerTitle>
-          <DrawerDescription>Add details to new product.</DrawerDescription>
+        <DrawerHeader className="p-2">
+          <DrawerTitle>
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <ArrowLeft />
+            </Button>
+          </DrawerTitle>
         </DrawerHeader>
         <div className="w-full h-full overflow-hidden">
-          <div className="w-full h-full box-content pr-4 overflow-y-auto">
+          <div className="w-full h-full box-content pl-2 pr-4 overflow-y-auto">
             <ProductForm
               id={formId}
               onSubmit={(e) => {

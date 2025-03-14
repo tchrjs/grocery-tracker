@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,19 +35,20 @@ export function ProductCalculator({ form }: { form: any }) {
         setValue(value);
       }}
     >
+      <FormLabel className="pt-2">Cost Calculator</FormLabel>
+      <FormDescription>Takes in x and y values to find z</FormDescription>
+
       <TabsList>
-        <TabsTrigger value={TabValue.UNIT_PRICE}>Find Unit Price</TabsTrigger>
-        <TabsTrigger value={TabValue.TOTAL_PRICE}>Find Total Price</TabsTrigger>
-        <TabsTrigger value={TabValue.QUANTITY}>Find Quantity</TabsTrigger>
+        <TabsTrigger value={TabValue.UNIT_PRICE}>Unit Price</TabsTrigger>
+        <TabsTrigger value={TabValue.TOTAL_PRICE}>Total Price</TabsTrigger>
+        <TabsTrigger value={TabValue.QUANTITY}>Quantity</TabsTrigger>
       </TabsList>
       <TabsContent value={TabValue.UNIT_PRICE}>
         <Card className="w-full">
           <CardHeader>
             <CardTitle>Calculate Unit Price</CardTitle>
             <CardDescription>
-              <span className="text-sm italic">
-                Unit Price = Total Price / Quantity
-              </span>
+              <span className="text-sm italic">= Total Price / Quantity</span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -63,9 +65,7 @@ export function ProductCalculator({ form }: { form: any }) {
           <CardHeader>
             <CardTitle>Calculate Total Price</CardTitle>
             <CardDescription>
-              <span className="text-sm italic">
-                Total Price = Unit Price * Quantity
-              </span>
+              <span className="text-sm italic">= Unit Price * Quantity</span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -82,9 +82,7 @@ export function ProductCalculator({ form }: { form: any }) {
           <CardHeader>
             <CardTitle>Calculate Quantity</CardTitle>
             <CardDescription>
-              <span className="text-sm italic">
-                Quantity = Total Price / Unit Price
-              </span>
+              <span className="text-sm italic">= Total Price / Unit Price</span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -268,7 +266,7 @@ const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
           </div>
           <FormControl>
             <Input
-              placeholder="0"
+              placeholder="0.00"
               readOnly={TabValue.QUANTITY === value}
               {...field}
               onChange={(e) => {
