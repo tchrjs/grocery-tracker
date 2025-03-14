@@ -2,10 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Grocery Pricing",
-    short_name: "GP",
+    name: "Grocery Tracker",
+    short_name: "GroceryTracker",
     description:
-      "A Progressive Web App to find the best store to buy grocery items from.",
+      "A Progressive Web App to help track grocery prices and to help manage spendings.",
     start_url: "/",
     display: "standalone",
     background_color: "#0a0a0a",

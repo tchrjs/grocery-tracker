@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Grocery Pricing",
-  description: "A web app to find the best store to buy grocery items from.",
+  title: "Grocery Tracker",
+  description:
+    "A Progressive Web App to help track grocery prices and to help manage spendings.",
   icons: {
     apple: [{ url: "/apple-icon.png" }],
   },
