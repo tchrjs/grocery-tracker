@@ -17,8 +17,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/src/components/ui/popover";
-import { Product } from "./product";
 import { useState } from "react";
+import { Product } from "@/src/db/schema";
 
 export function ProductSearchInput({
   products,
@@ -48,7 +48,7 @@ export function ProductSearchInput({
         <Command>
           <CommandInput placeholder="Search product..." />
           <CommandList>
-            <CommandEmpty>No product found.</CommandEmpty>
+            <CommandEmpty>No products found</CommandEmpty>
             <CommandGroup>
               {labels.map((label, i) => (
                 <CommandItem

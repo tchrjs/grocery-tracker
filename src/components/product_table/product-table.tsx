@@ -1,9 +1,9 @@
 "use client";
 
-import { Product } from "./product";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -11,7 +11,8 @@ import {
 import { ProductSearchInput } from "./product-search-input";
 import { useState } from "react";
 import { ProductDrawer } from "../product_drawer/product-drawer";
-import { Separator } from "../ui/separator";
+import { StarRating } from "./star-rating";
+import { Product } from "@/src/db/schema";
 
 export function ProductTable({ products }: { products: Product[] }) {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
@@ -35,14 +36,25 @@ export function ProductTable({ products }: { products: Product[] }) {
             <TableHead>Unit</TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Quality</TableHead>
-            <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {selectedProduct ? (
             products
               .filter((product) => product.name === selectedProduct)
-              .map((product, i) => <Product key={i} product={product} />)
+              .map((product, i) => (
+                <TableRow>
+                  <TableCell>{product.store}</TableCell>
+                  <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
+                  <TableCell>{`$${product.unit_price.toFixed(2)}/${
+                    product.measurement
+                  }`}</TableCell>
+                  <TableCell>{`${product.quantity} ${product.measurement}`}</TableCell>
+                  <TableCell>
+                    <StarRating value={product.quality} />
+                  </TableCell>
+                </TableRow>
+              ))
           ) : (
             <></>
           )}
