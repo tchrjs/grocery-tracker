@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useState } from "react";
+import { Separator } from "../ui/separator";
 
 enum TabValue {
   UNIT_PRICE = "unit_price",
@@ -35,7 +36,7 @@ export function ProductCalculator({ form }: { form: any }) {
     >
       <TabsList>
         <TabsTrigger value={TabValue.UNIT_PRICE}>Find Unit Price</TabsTrigger>
-        <TabsTrigger value={TabValue.TOTAL_PRICE}>Find Total</TabsTrigger>
+        <TabsTrigger value={TabValue.TOTAL_PRICE}>Find Total Price</TabsTrigger>
         <TabsTrigger value={TabValue.QUANTITY}>Find Quantity</TabsTrigger>
       </TabsList>
       <TabsContent value={TabValue.UNIT_PRICE}>
@@ -44,13 +45,15 @@ export function ProductCalculator({ form }: { form: any }) {
             <CardTitle>Calculate Unit Price</CardTitle>
             <CardDescription>
               <span className="text-sm italic">
-                Total / Quantity = Unit Price
+                Unit Price = Total Price / Quantity
               </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <TotalFormField form={form} value={value} />
+            <TotalPriceFormField form={form} value={value} />
             <QuantityFormField form={form} value={value} />
+            <Separator className="my-4" />
+            <UnitPriceFormField form={form} value={value} />
           </CardContent>
           <CardFooter></CardFooter>
         </Card>
@@ -58,16 +61,18 @@ export function ProductCalculator({ form }: { form: any }) {
       <TabsContent value={TabValue.TOTAL_PRICE}>
         <Card>
           <CardHeader>
-            <CardTitle>Calculate Total</CardTitle>
+            <CardTitle>Calculate Total Price</CardTitle>
             <CardDescription>
               <span className="text-sm italic">
-                Unit Price * Quantity = Total
+                Total Price = Unit Price * Quantity
               </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <UnitPriceFormField form={form} value={value} />
             <QuantityFormField form={form} value={value} />
+            <Separator className="my-4" />
+            <TotalPriceFormField form={form} value={value} />
           </CardContent>
           <CardFooter></CardFooter>
         </Card>
@@ -78,13 +83,15 @@ export function ProductCalculator({ form }: { form: any }) {
             <CardTitle>Calculate Quantity</CardTitle>
             <CardDescription>
               <span className="text-sm italic">
-                Total / Unit Price = Quantity
+                Quantity = Total Price / Unit Price
               </span>
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <TotalFormField form={form} value={value} />
+            <TotalPriceFormField form={form} value={value} />
             <UnitPriceFormField form={form} value={value} />
+            <Separator className="my-4" />
+            <QuantityFormField form={form} value={value} />
           </CardContent>
           <CardFooter></CardFooter>
         </Card>
@@ -93,21 +100,21 @@ export function ProductCalculator({ form }: { form: any }) {
   );
 }
 
-const TotalFormField = ({ form, value }: { form: any; value: string }) => {
+const TotalPriceFormField = ({ form, value }: { form: any; value: string }) => {
   const handleChange = (e: any, field: any) => {
-    const newTotal = Number(setToCurrency(e.target.value));
-    field.onChange(newTotal.toString());
+    const newTotalPrice = cleanNumber(e.target.value);
+    field.onChange(newTotalPrice);
 
     let quantity = Number(form.getValues(TabValue.QUANTITY));
     let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
     switch (value) {
       case TabValue.UNIT_PRICE:
-        unit_price = newTotal / quantity;
-        form.setValue("unit_price", setToCurrency(unit_price.toString()));
+        unit_price = Number(newTotalPrice) / quantity;
+        form.setValue(TabValue.UNIT_PRICE, cleanNumber(unit_price.toString()));
         break;
       case TabValue.QUANTITY:
-        quantity = newTotal / unit_price;
-        form.setValue("quantity", setToCurrency(unit_price.toString()));
+        quantity = Number(newTotalPrice) / unit_price;
+        form.setValue(TabValue.QUANTITY, cleanNumber(quantity.toString()));
         break;
     }
   };
@@ -123,7 +130,7 @@ const TotalFormField = ({ form, value }: { form: any; value: string }) => {
   return (
     <FormField
       control={form.control}
-      name="total_price"
+      name={TabValue.TOTAL_PRICE}
       render={({ field }) => (
         <FormItem>
           <div className="flex justify-between">
@@ -138,6 +145,7 @@ const TotalFormField = ({ form, value }: { form: any; value: string }) => {
               <Input
                 className="pl-6"
                 placeholder="0.00"
+                readOnly={TabValue.TOTAL_PRICE === value}
                 {...field}
                 onChange={(e) => {
                   handleChange(e, field);
@@ -156,22 +164,22 @@ const TotalFormField = ({ form, value }: { form: any; value: string }) => {
 
 const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
   const handleChange = (e: any, field: any) => {
-    const newUnitPrice = Number(setToCurrency(e.target.value));
-    field.onChange(newUnitPrice.toString());
+    const newUnitPrice = cleanNumber(e.target.value);
+    field.onChange(newUnitPrice);
 
     let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
     let quantity = Number(form.getValues(TabValue.QUANTITY));
     switch (value) {
       case TabValue.TOTAL_PRICE:
-        total_price = newUnitPrice * quantity;
+        total_price = Number(newUnitPrice) * quantity;
         form.setValue(
           TabValue.TOTAL_PRICE,
-          setToCurrency(total_price.toString())
+          cleanNumber(total_price.toString())
         );
         break;
       case TabValue.QUANTITY:
-        quantity = total_price / newUnitPrice;
-        form.setValue(TabValue.QUANTITY, quantity);
+        quantity = total_price / Number(newUnitPrice);
+        form.setValue(TabValue.QUANTITY, cleanNumber(quantity.toString()));
         break;
     }
   };
@@ -187,7 +195,7 @@ const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
   return (
     <FormField
       control={form.control}
-      name="unit_price"
+      name={TabValue.UNIT_PRICE}
       render={({ field }) => (
         <FormItem>
           <div className="flex justify-between">
@@ -202,6 +210,7 @@ const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
               <Input
                 className="pl-6"
                 placeholder="0.00"
+                readOnly={TabValue.UNIT_PRICE === value}
                 {...field}
                 onChange={(e) => {
                   handleChange(e, field);
@@ -220,24 +229,21 @@ const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
 
 const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
   const handleChange = (e: any, field: any) => {
-    const newQuantityValue = e.target.value;
+    const newQuantityValue = cleanNumber(e.target.value);
     field.onChange(newQuantityValue);
 
     let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
     let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
     switch (value) {
       case TabValue.UNIT_PRICE:
-        unit_price = total_price * newQuantityValue;
-        form.setValue(
-          TabValue.UNIT_PRICE,
-          setToCurrency(total_price.toString())
-        );
+        unit_price = total_price / Number(newQuantityValue);
+        form.setValue(TabValue.UNIT_PRICE, cleanNumber(unit_price.toString()));
         break;
       case TabValue.TOTAL_PRICE:
-        total_price = unit_price * newQuantityValue;
+        total_price = unit_price * Number(newQuantityValue);
         form.setValue(
           TabValue.TOTAL_PRICE,
-          setToCurrency(total_price.toString())
+          cleanNumber(total_price.toString())
         );
         break;
     }
@@ -247,13 +253,13 @@ const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
     if (!isNaN(Number(e.target.value))) {
       field.onChange(Number(e.target.value).toFixed(2));
     } else {
-      field.onChange("0.00");
+      field.onChange(0);
     }
   };
   return (
     <FormField
       control={form.control}
-      name="quantity"
+      name={TabValue.QUANTITY}
       render={({ field }) => (
         <FormItem>
           <div className="flex justify-between">
@@ -262,7 +268,8 @@ const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
           </div>
           <FormControl>
             <Input
-              placeholder="Enter product size"
+              placeholder="0"
+              readOnly={TabValue.QUANTITY === value}
               {...field}
               onChange={(e) => {
                 handleChange(e, field);
@@ -278,7 +285,7 @@ const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
   );
 };
 
-function setToCurrency(value: string): string {
+function cleanNumber(value: string): string {
   return value
     .replace(/[^0-9.]/g, "")
     .replace(/(\..*)\./g, "$1")

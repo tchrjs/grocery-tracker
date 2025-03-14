@@ -20,7 +20,7 @@ const formSchema = z.object({
   measurement: z.string().min(1, { message: "Required" }),
   total_price: z.string(),
   unit_price: z.string(),
-  quantity: z.number().positive().gt(1),
+  quantity: z.string().min(1, { message: "Required" }),
 });
 
 export function ProductForm({
@@ -36,9 +36,9 @@ export function ProductForm({
       name: "",
       store: "",
       measurement: "",
-      total_price: "0.00",
-      unit_price: "0.00",
-      quantity: 1,
+      total_price: "",
+      unit_price: "",
+      quantity: "",
     },
   });
 
