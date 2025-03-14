@@ -47,15 +47,13 @@ export function ProductDrawer() {
             </Button>
           </DrawerTitle>
         </DrawerHeader>
-        <div className="w-full h-full overflow-hidden">
-          <div className="w-full h-full box-content pl-2 pr-4 overflow-y-auto">
-            <ProductForm
-              id={formId}
-              onSubmit={(e) => {
-                setOpen(false);
-              }}
-            />
-          </div>
+        <div className="overflow-y-auto no-scrollbar">
+          <ProductForm
+            id={formId}
+            onSubmit={() => {
+              setOpen(false);
+            }}
+          />
         </div>
         <DrawerFooter className="mb-4">
           <Button variant={"default"} type={"submit"} form={formId}>
