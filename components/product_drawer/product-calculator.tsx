@@ -15,16 +15,30 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useState } from "react";
 
-export function ProductCalculator(form: any) {
+enum TabValue {
+  UNIT_PRICE = "unit_price",
+  TOTAL_PRICE = "total_price",
+  QUANTITY = "quantity",
+}
+
+export function ProductCalculator({ form }: { form: any }) {
+  const [value, setValue] = useState<string>(TabValue.UNIT_PRICE);
+
   return (
-    <Tabs defaultValue="unit-price">
+    <Tabs
+      defaultValue={TabValue.UNIT_PRICE}
+      onValueChange={(value) => {
+        setValue(value);
+      }}
+    >
       <TabsList>
-        <TabsTrigger value="unit-price">Find Unit Price</TabsTrigger>
-        <TabsTrigger value="total">Find Total</TabsTrigger>
-        <TabsTrigger value="quantity">Find Quantity</TabsTrigger>
+        <TabsTrigger value={TabValue.UNIT_PRICE}>Find Unit Price</TabsTrigger>
+        <TabsTrigger value={TabValue.TOTAL_PRICE}>Find Total</TabsTrigger>
+        <TabsTrigger value={TabValue.QUANTITY}>Find Quantity</TabsTrigger>
       </TabsList>
-      <TabsContent value="unit-price">
+      <TabsContent value={TabValue.UNIT_PRICE}>
         <Card className="w-full">
           <CardHeader>
             <CardTitle>Calculate Unit Price</CardTitle>
@@ -35,13 +49,13 @@ export function ProductCalculator(form: any) {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <TotalFormField form={form} />
-            <QuantityFormField form={form} />
+            <TotalFormField form={form} value={value} />
+            <QuantityFormField form={form} value={value} />
           </CardContent>
           <CardFooter></CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="total">
+      <TabsContent value={TabValue.TOTAL_PRICE}>
         <Card>
           <CardHeader>
             <CardTitle>Calculate Total</CardTitle>
@@ -52,13 +66,13 @@ export function ProductCalculator(form: any) {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <UnitPriceFormField form={form} />
-            <QuantityFormField form={form} />
+            <UnitPriceFormField form={form} value={value} />
+            <QuantityFormField form={form} value={value} />
           </CardContent>
           <CardFooter></CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="quantity">
+      <TabsContent value={TabValue.QUANTITY}>
         <Card>
           <CardHeader>
             <CardTitle>Calculate Quantity</CardTitle>
@@ -69,8 +83,8 @@ export function ProductCalculator(form: any) {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <TotalFormField form={form} />
-            <UnitPriceFormField form={form} />
+            <TotalFormField form={form} value={value} />
+            <UnitPriceFormField form={form} value={value} />
           </CardContent>
           <CardFooter></CardFooter>
         </Card>
@@ -79,7 +93,33 @@ export function ProductCalculator(form: any) {
   );
 }
 
-const TotalFormField = (form: any) => {
+const TotalFormField = ({ form, value }: { form: any; value: string }) => {
+  const handleChange = (e: any, field: any) => {
+    const newTotal = Number(setToCurrency(e.target.value));
+    field.onChange(newTotal.toString());
+
+    let quantity = Number(form.getValues(TabValue.QUANTITY));
+    let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
+    switch (value) {
+      case TabValue.UNIT_PRICE:
+        unit_price = newTotal / quantity;
+        form.setValue("unit_price", setToCurrency(unit_price.toString()));
+        break;
+      case TabValue.QUANTITY:
+        quantity = newTotal / unit_price;
+        form.setValue("quantity", setToCurrency(unit_price.toString()));
+        break;
+    }
+  };
+
+  const handleBlur = (e: any, field: any) => {
+    if (!isNaN(Number(e.target.value))) {
+      field.onChange(Number(e.target.value).toFixed(2));
+    } else {
+      field.onChange("0.00");
+    }
+  };
+
   return (
     <FormField
       control={form.control}
@@ -99,13 +139,11 @@ const TotalFormField = (form: any) => {
                 className="pl-6"
                 placeholder="0.00"
                 {...field}
-                onChange={(e) => field.onChange(setToCurrency(e.target.value))}
+                onChange={(e) => {
+                  handleChange(e, field);
+                }}
                 onBlur={(e) => {
-                  if (!isNaN(Number(e.target.value))) {
-                    field.onChange(Number(e.target.value).toFixed(2));
-                  } else {
-                    field.onChange("0.00");
-                  }
+                  handleBlur(e, field);
                 }}
               />
             </FormControl>
@@ -116,7 +154,36 @@ const TotalFormField = (form: any) => {
   );
 };
 
-const UnitPriceFormField = (form: any) => {
+const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
+  const handleChange = (e: any, field: any) => {
+    const newUnitPrice = Number(setToCurrency(e.target.value));
+    field.onChange(newUnitPrice.toString());
+
+    let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
+    let quantity = Number(form.getValues(TabValue.QUANTITY));
+    switch (value) {
+      case TabValue.TOTAL_PRICE:
+        total_price = newUnitPrice * quantity;
+        form.setValue(
+          TabValue.TOTAL_PRICE,
+          setToCurrency(total_price.toString())
+        );
+        break;
+      case TabValue.QUANTITY:
+        quantity = total_price / newUnitPrice;
+        form.setValue(TabValue.QUANTITY, quantity);
+        break;
+    }
+  };
+
+  const handleBlur = (e: any, field: any) => {
+    if (!isNaN(Number(e.target.value))) {
+      field.onChange(Number(e.target.value).toFixed(2));
+    } else {
+      field.onChange("0.00");
+    }
+  };
+
   return (
     <FormField
       control={form.control}
@@ -136,13 +203,11 @@ const UnitPriceFormField = (form: any) => {
                 className="pl-6"
                 placeholder="0.00"
                 {...field}
-                onChange={(e) => field.onChange(setToCurrency(e.target.value))}
+                onChange={(e) => {
+                  handleChange(e, field);
+                }}
                 onBlur={(e) => {
-                  if (!isNaN(Number(e.target.value))) {
-                    field.onChange(Number(e.target.value).toFixed(2));
-                  } else {
-                    field.onChange("0.00");
-                  }
+                  handleBlur(e, field);
                 }}
               />
             </FormControl>
@@ -153,7 +218,38 @@ const UnitPriceFormField = (form: any) => {
   );
 };
 
-const QuantityFormField = (form: any) => {
+const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
+  const handleChange = (e: any, field: any) => {
+    const newQuantityValue = e.target.value;
+    field.onChange(newQuantityValue);
+
+    let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
+    let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
+    switch (value) {
+      case TabValue.UNIT_PRICE:
+        unit_price = total_price * newQuantityValue;
+        form.setValue(
+          TabValue.UNIT_PRICE,
+          setToCurrency(total_price.toString())
+        );
+        break;
+      case TabValue.TOTAL_PRICE:
+        total_price = unit_price * newQuantityValue;
+        form.setValue(
+          TabValue.TOTAL_PRICE,
+          setToCurrency(total_price.toString())
+        );
+        break;
+    }
+  };
+
+  const handleBlur = (e: any, field: any) => {
+    if (!isNaN(Number(e.target.value))) {
+      field.onChange(Number(e.target.value).toFixed(2));
+    } else {
+      field.onChange("0.00");
+    }
+  };
   return (
     <FormField
       control={form.control}
@@ -165,7 +261,16 @@ const QuantityFormField = (form: any) => {
             <FormMessage />
           </div>
           <FormControl>
-            <Input placeholder="Enter product size" {...field} />
+            <Input
+              placeholder="Enter product size"
+              {...field}
+              onChange={(e) => {
+                handleChange(e, field);
+              }}
+              onBlur={(e) => {
+                handleBlur(e, field);
+              }}
+            />
           </FormControl>
         </FormItem>
       )}
