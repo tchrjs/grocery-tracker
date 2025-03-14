@@ -9,8 +9,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/src/components/ui/form";
+import { Input } from "@/src/components/ui/input";
 import { ProductCalculator } from "./product-calculator";
 
 const formSchema = z.object({
@@ -44,7 +44,7 @@ export function ProductForm({
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-8 h-full px-4 text-sm"
+        className="flex flex-col gap-10 h-full px-4 text-sm"
         id={id}
         onSubmit={form.handleSubmit(onSubmit)}
       >

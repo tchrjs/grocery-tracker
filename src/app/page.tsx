@@ -1,5 +1,5 @@
-import { createProduct, Product } from "@/components/product_table/product";
-import { ProductTable } from "@/components/product_table/product-table";
+import { createProduct, Product } from "@/src/components/product_table/product";
+import { ProductTable } from "@/src/components/product_table/product-table";
 
 let products: Array<Product> = [];
 products.push(createProduct("Apple", "Albertsons", 1.49, 1, "lb", 5));

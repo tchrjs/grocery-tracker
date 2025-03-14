@@ -4,7 +4,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from "@/components/ui/drawer";
+} from "@/src/components/ui/drawer";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { ProductForm } from "./product-form";

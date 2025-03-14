@@ -2,8 +2,8 @@
 
 import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/src/lib/utils";
+import { Button } from "@/src/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,12 +11,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/src/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/src/components/ui/popover";
 import { Product } from "./product";
 import { useState } from "react";
 

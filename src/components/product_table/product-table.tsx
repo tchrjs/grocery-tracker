@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/src/components/ui/table";
 import { ProductSearchInput } from "./product-search-input";
 import { useState } from "react";
 import { ProductDrawer } from "../product_drawer/product-drawer";

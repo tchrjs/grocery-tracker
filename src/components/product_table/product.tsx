@@ -1,4 +1,4 @@
-import { TableCell, TableRow } from "@/components/ui/table";
+import { TableCell, TableRow } from "@/src/components/ui/table";
 import { RatingRange, StarRating } from "./star-rating";
 
 export interface Product {
