@@ -1,8 +1,15 @@
 import { Star } from "lucide-react";
 
-export type RatingRange = 0 | 1 | 2 | 3 | 4 | 5;
+export enum QualityRating {
+  ZERO = 0,
+  ONE = 1,
+  TWO = 2,
+  THREE = 3,
+  FOUR = 4,
+  FIVE = 5,
+}
 
-export function StarRating({ value = 0 }) {
+export function StarRating({ value }: { value: QualityRating }) {
   return (
     <div className="flex justify-center items-center">
       {Array.from({ length: 5 }, (_, i) => (

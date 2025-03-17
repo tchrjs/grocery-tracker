@@ -12,6 +12,8 @@ import {
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
 import { ProductCalculator } from "./product-calculator";
+import { Product } from "@/src/db/schema";
+import { toTitleCase } from "@/src/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -27,7 +29,7 @@ export function ProductForm({
   onSubmit,
 }: {
   id: string | undefined;
-  onSubmit: SubmitHandler<z.infer<typeof formSchema>>;
+  onSubmit: SubmitHandler<Product>;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,15 +43,28 @@ export function ProductForm({
     },
   });
 
+  const handleSubmit = (e: z.infer<typeof formSchema>) => {
+    const product: Product = {
+      name: toTitleCase(e.name),
+      store: e.store,
+      total_price: Number(e.total_price),
+      unit_price: Number(e.unit_price),
+      measurement: e.measurement,
+      quantity: Number(e.quantity),
+      quality: 3,
+    };
+    onSubmit(product);
+  };
+
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-10 h-full px-4 text-sm"
+        className="flex flex-col gap-12 h-full px-4 text-sm"
         id={id}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
       >
         <div className="flex flex-col gap-4">
-          <div className="text-lg text-foreground">General Information</div>
+          <div className="text-lg">General Information</div>
           <div className="flex flex-col gap-4">
             <FormField
               control={form.control}
@@ -84,7 +99,7 @@ export function ProductForm({
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="text-lg text-foreground">Pricing Information</div>
+          <div className="text-lg">Pricing Information</div>
           <div className="flex flex-col gap-4 pb-4">
             <FormField
               control={form.control}

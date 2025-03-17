@@ -1,24 +1,22 @@
 import { pgTable, serial, text, integer, real } from "drizzle-orm/pg-core";
-import { RatingRange } from "../components/product_table/star-rating";
+import { QualityRating } from "../components/product_table/star-rating";
+import { InferSelectModel } from "drizzle-orm";
 
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
-  name: text(),
-  store: text(),
-  total_price: real(),
-  unit_price: real(),
-  measurement: text(),
-  quantity: real(),
-  quality: integer(),
+  name: text().notNull(),
+  store: text().notNull(),
+  total_price: real().notNull(),
+  unit_price: real().notNull(),
+  measurement: text().notNull(),
+  quantity: real().notNull(),
+  quality: integer().notNull(),
 });
 
-export type Product = {
-  id: number;
-  name: string;
-  store: string;
-  total_price: number;
-  unit_price: number;
-  measurement: any;
-  quantity: number;
-  quality: RatingRange;
+export type Product = Omit<
+  InferSelectModel<typeof products>,
+  "id" | "quality"
+> & {
+  id?: number;
+  quality: QualityRating;
 };

@@ -43,7 +43,7 @@ export function ProductTable({ products }: { products: Product[] }) {
             products
               .filter((product) => product.name === selectedProduct)
               .map((product, i) => (
-                <TableRow>
+                <TableRow key={i}>
                   <TableCell>{product.store}</TableCell>
                   <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
                   <TableCell>{`$${product.unit_price.toFixed(2)}/${
