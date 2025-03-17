@@ -100,19 +100,19 @@ export function ProductCalculator({ form }: { form: any }) {
 
 const TotalPriceFormField = ({ form, value }: { form: any; value: string }) => {
   const handleChange = (e: any, field: any) => {
-    const newTotalPrice = cleanNumber(e.target.value);
-    field.onChange(newTotalPrice);
+    const strNum = cleanNumber(e.target.value);
+    field.onChange(strNum);
 
     let quantity = Number(form.getValues(TabValue.QUANTITY));
     let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
     switch (value) {
       case TabValue.UNIT_PRICE:
-        unit_price = Number(newTotalPrice) / quantity;
-        form.setValue(TabValue.UNIT_PRICE, cleanNumber(unit_price.toString()));
+        unit_price = quantity > 0 ? Number(strNum) / quantity : 0;
+        form.setValue(TabValue.UNIT_PRICE, unit_price.toFixed(2));
         break;
       case TabValue.QUANTITY:
-        quantity = Number(newTotalPrice) / unit_price;
-        form.setValue(TabValue.QUANTITY, cleanNumber(quantity.toString()));
+        quantity = unit_price > 0 ? Number(strNum) / unit_price : 0;
+        form.setValue(TabValue.QUANTITY, quantity.toFixed(2));
         break;
     }
   };
@@ -162,22 +162,19 @@ const TotalPriceFormField = ({ form, value }: { form: any; value: string }) => {
 
 const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
   const handleChange = (e: any, field: any) => {
-    const newUnitPrice = cleanNumber(e.target.value);
-    field.onChange(newUnitPrice);
+    const strNum = cleanNumber(e.target.value);
+    field.onChange(strNum);
 
     let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
     let quantity = Number(form.getValues(TabValue.QUANTITY));
     switch (value) {
       case TabValue.TOTAL_PRICE:
-        total_price = Number(newUnitPrice) * quantity;
-        form.setValue(
-          TabValue.TOTAL_PRICE,
-          cleanNumber(total_price.toString())
-        );
+        total_price = Number(strNum) * quantity;
+        form.setValue(TabValue.TOTAL_PRICE, total_price.toFixed(2));
         break;
       case TabValue.QUANTITY:
-        quantity = total_price / Number(newUnitPrice);
-        form.setValue(TabValue.QUANTITY, cleanNumber(quantity.toString()));
+        quantity = Number(strNum) > 0 ? total_price / Number(strNum) : 0;
+        form.setValue(TabValue.QUANTITY, quantity.toFixed(2));
         break;
     }
   };
@@ -227,22 +224,19 @@ const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
 
 const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
   const handleChange = (e: any, field: any) => {
-    const newQuantityValue = cleanNumber(e.target.value);
-    field.onChange(newQuantityValue);
+    const strNum = cleanNumber(e.target.value);
+    field.onChange(strNum);
 
     let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
     let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
     switch (value) {
       case TabValue.UNIT_PRICE:
-        unit_price = total_price / Number(newQuantityValue);
-        form.setValue(TabValue.UNIT_PRICE, cleanNumber(unit_price.toString()));
+        unit_price = Number(strNum) > 0 ? total_price / Number(strNum) : 0;
+        form.setValue(TabValue.UNIT_PRICE, unit_price.toFixed(2));
         break;
       case TabValue.TOTAL_PRICE:
-        total_price = unit_price * Number(newQuantityValue);
-        form.setValue(
-          TabValue.TOTAL_PRICE,
-          cleanNumber(total_price.toString())
-        );
+        total_price = unit_price * Number(strNum);
+        form.setValue(TabValue.TOTAL_PRICE, total_price.toFixed(2));
         break;
     }
   };
@@ -254,6 +248,7 @@ const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
       field.onChange(0);
     }
   };
+
   return (
     <FormField
       control={form.control}
