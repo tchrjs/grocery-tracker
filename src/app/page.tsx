@@ -1,3 +1,5 @@
+"use server";
+
 import { ProductTable } from "@/src/components/product_table/product-table";
 import { Product } from "../db/schema";
 import { getProducts } from "../db/db";
