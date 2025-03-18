@@ -36,6 +36,7 @@ export function ProductTable({ products }: { products: Product[] }) {
             <TableHead>Unit</TableHead>
             <TableHead>Quantity</TableHead>
             <TableHead>Quality</TableHead>
+            <TableHead>Last Updated</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,6 +54,7 @@ export function ProductTable({ products }: { products: Product[] }) {
                   <TableCell>
                     <StarRating value={product.quality} />
                   </TableCell>
+                  <TableCell>{product.date}</TableCell>
                 </TableRow>
               ))
           ) : (

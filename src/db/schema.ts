@@ -1,4 +1,11 @@
-import { pgTable, serial, text, integer, real } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  real,
+  date,
+} from "drizzle-orm/pg-core";
 import { QualityRating } from "../components/product_table/star-rating";
 import { InferSelectModel } from "drizzle-orm";
 
@@ -11,6 +18,7 @@ export const products = pgTable("products", {
   measurement: text().notNull(),
   quantity: real().notNull(),
   quality: integer().notNull(),
+  date: date(),
 });
 
 export type Product = Omit<

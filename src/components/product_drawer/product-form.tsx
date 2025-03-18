@@ -14,6 +14,16 @@ import { Input } from "@/src/components/ui/input";
 import { ProductCalculator } from "./product-calculator";
 import { Product } from "@/src/db/schema";
 import { toTitleCase } from "@/src/lib/utils";
+import { DatePicker } from "./product-date-picker";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -22,6 +32,8 @@ const formSchema = z.object({
   total_price: z.string(),
   unit_price: z.string(),
   quantity: z.string(),
+  quality: z.string(),
+  date: z.coerce.date(),
 });
 
 export function ProductForm({
@@ -40,6 +52,8 @@ export function ProductForm({
       total_price: "",
       unit_price: "",
       quantity: "",
+      quality: "",
+      date: new Date(),
     },
   });
 
@@ -51,7 +65,8 @@ export function ProductForm({
       unit_price: Number(e.unit_price),
       measurement: e.measurement,
       quantity: Number(e.quantity),
-      quality: 3,
+      quality: Number(e.quality),
+      date: e.date.toDateString(),
     };
     onSubmit(product);
   };
@@ -92,6 +107,50 @@ export function ProductForm({
                   </div>
                   <FormControl>
                     <Input placeholder="Enter store name" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="quality"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex justify-between">
+                    <FormLabel>Quality</FormLabel>
+                    <FormMessage />
+                  </div>
+                  <FormControl>
+                    <Select defaultValue="3" onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select quality" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Quality Ratings</SelectLabel>
+                          <SelectItem value="1">1 - Poor</SelectItem>
+                          <SelectItem value="2">2 - Fair</SelectItem>
+                          <SelectItem value="3">3 - Okay</SelectItem>
+                          <SelectItem value="4">4 - Good</SelectItem>
+                          <SelectItem value="5">5 - Excellent</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex justify-between">
+                    <FormLabel>Date Created</FormLabel>
+                    <FormMessage />
+                  </div>
+                  <FormControl>
+                    <DatePicker placeholder="Pick a date" {...field} />
                   </FormControl>
                 </FormItem>
               )}
