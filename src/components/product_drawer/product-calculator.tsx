@@ -232,6 +232,8 @@ const CustomFormField = ({
               <Input
                 placeholder="0.00"
                 readOnly={readOnly}
+                inputMode="decimal"
+                pattern="[0-9]*"
                 {...field}
                 onChange={(e) => handleChange(e, field)}
                 onBlur={(e) => handleBlur(e, field)}
