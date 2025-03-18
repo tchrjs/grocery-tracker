@@ -26,15 +26,10 @@ enum TabValue {
 }
 
 export function ProductCalculator({ form }: { form: any }) {
-  const [value, setValue] = useState<string>(TabValue.UNIT_PRICE);
+  const [activeTab, setActiveTab] = useState<string>(TabValue.UNIT_PRICE);
 
   return (
-    <Tabs
-      defaultValue={TabValue.UNIT_PRICE}
-      onValueChange={(value) => {
-        setValue(value);
-      }}
-    >
+    <Tabs defaultValue={TabValue.UNIT_PRICE} onValueChange={setActiveTab}>
       <FormLabel className="pt-2">Cost Calculator</FormLabel>
       <FormDescription>Takes in x and y values to find z</FormDescription>
 
@@ -43,235 +38,206 @@ export function ProductCalculator({ form }: { form: any }) {
         <TabsTrigger value={TabValue.TOTAL_PRICE}>Total Price</TabsTrigger>
         <TabsTrigger value={TabValue.QUANTITY}>Quantity</TabsTrigger>
       </TabsList>
+
       <TabsContent value={TabValue.UNIT_PRICE}>
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Calculate Unit Price</CardTitle>
-            <CardDescription>
-              <span className="text-sm italic">= Total Price / Quantity</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <TotalPriceFormField form={form} value={value} />
-            <QuantityFormField form={form} value={value} />
-            <Separator className="my-4" />
-            <UnitPriceFormField form={form} value={value} />
-          </CardContent>
-          <CardFooter></CardFooter>
-        </Card>
+        <CalculationCard
+          title="Calculate Unit Price"
+          description="= Total Price / Quantity"
+        >
+          <TotalPriceFormField form={form} activeTab={activeTab} />
+          <QuantityFormField form={form} activeTab={activeTab} />
+          <Separator className="my-4" />
+          <UnitPriceFormField form={form} activeTab={activeTab} />
+        </CalculationCard>
       </TabsContent>
+
       <TabsContent value={TabValue.TOTAL_PRICE}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Calculate Total Price</CardTitle>
-            <CardDescription>
-              <span className="text-sm italic">= Unit Price * Quantity</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <UnitPriceFormField form={form} value={value} />
-            <QuantityFormField form={form} value={value} />
-            <Separator className="my-4" />
-            <TotalPriceFormField form={form} value={value} />
-          </CardContent>
-          <CardFooter></CardFooter>
-        </Card>
+        <CalculationCard
+          title="Calculate Total Price"
+          description="= Unit Price * Quantity"
+        >
+          <UnitPriceFormField form={form} activeTab={activeTab} />
+          <QuantityFormField form={form} activeTab={activeTab} />
+          <Separator className="my-4" />
+          <TotalPriceFormField form={form} activeTab={activeTab} />
+        </CalculationCard>
       </TabsContent>
+
       <TabsContent value={TabValue.QUANTITY}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Calculate Quantity</CardTitle>
-            <CardDescription>
-              <span className="text-sm italic">= Total Price / Unit Price</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <TotalPriceFormField form={form} value={value} />
-            <UnitPriceFormField form={form} value={value} />
-            <Separator className="my-4" />
-            <QuantityFormField form={form} value={value} />
-          </CardContent>
-          <CardFooter></CardFooter>
-        </Card>
+        <CalculationCard
+          title="Calculate Quantity"
+          description="= Total Price / Unit Price"
+        >
+          <TotalPriceFormField form={form} activeTab={activeTab} />
+          <UnitPriceFormField form={form} activeTab={activeTab} />
+          <Separator className="my-4" />
+          <QuantityFormField form={form} activeTab={activeTab} />
+        </CalculationCard>
       </TabsContent>
     </Tabs>
   );
 }
 
-const TotalPriceFormField = ({ form, value }: { form: any; value: string }) => {
-  const handleChange = (e: any, field: any) => {
-    const strNum = cleanNumber(e.target.value);
-    field.onChange(strNum);
+const CalculationCard = ({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{title}</CardTitle>
+      <CardDescription>
+        <span className="text-sm italic">{description}</span>
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-2">{children}</CardContent>
+    <CardFooter></CardFooter>
+  </Card>
+);
 
-    let quantity = Number(form.getValues(TabValue.QUANTITY));
-    let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
-    switch (value) {
-      case TabValue.UNIT_PRICE:
-        unit_price = quantity > 0 ? Number(strNum) / quantity : 0;
-        form.setValue(TabValue.UNIT_PRICE, unit_price.toFixed(2));
-        break;
-      case TabValue.QUANTITY:
-        quantity = unit_price > 0 ? Number(strNum) / unit_price : 0;
-        form.setValue(TabValue.QUANTITY, quantity.toFixed(2));
-        break;
-    }
-  };
-
-  const handleBlur = (e: any, field: any) => {
-    if (!isNaN(Number(e.target.value))) {
-      field.onChange(Number(e.target.value).toFixed(2));
-    } else {
-      field.onChange("0.00");
-    }
-  };
-
+const TotalPriceFormField = ({
+  form,
+  activeTab,
+}: {
+  form: any;
+  activeTab: string;
+}) => {
   return (
-    <FormField
-      control={form.control}
+    <CustomFormField
+      form={form}
       name={TabValue.TOTAL_PRICE}
-      render={({ field }) => (
-        <FormItem>
-          <div className="flex justify-between">
-            <FormLabel>Total Price</FormLabel>
-            <FormMessage />
-          </div>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-              $
-            </span>
-            <FormControl>
-              <Input
-                className="pl-6"
-                placeholder="0.00"
-                readOnly={TabValue.TOTAL_PRICE === value}
-                {...field}
-                onChange={(e) => {
-                  handleChange(e, field);
-                }}
-                onBlur={(e) => {
-                  handleBlur(e, field);
-                }}
-              />
-            </FormControl>
-          </div>
-        </FormItem>
-      )}
+      label="Total Price ($)"
+      readOnly={activeTab === TabValue.TOTAL_PRICE}
+      onChangeCallback={(value, form) => {
+        const quantity = Number(form.getValues(TabValue.QUANTITY));
+        const unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
+        if (activeTab === TabValue.UNIT_PRICE) {
+          form.setValue(
+            TabValue.UNIT_PRICE,
+            (quantity > 0 ? value / quantity : 0).toFixed(2)
+          );
+        } else if (activeTab === TabValue.QUANTITY) {
+          form.setValue(
+            TabValue.QUANTITY,
+            (unit_price > 0 ? value / unit_price : 0).toFixed(2)
+          );
+        }
+      }}
     />
   );
 };
 
-const UnitPriceFormField = ({ form, value }: { form: any; value: string }) => {
-  const handleChange = (e: any, field: any) => {
-    const strNum = cleanNumber(e.target.value);
-    field.onChange(strNum);
-
-    let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
-    let quantity = Number(form.getValues(TabValue.QUANTITY));
-    switch (value) {
-      case TabValue.TOTAL_PRICE:
-        total_price = Number(strNum) * quantity;
-        form.setValue(TabValue.TOTAL_PRICE, total_price.toFixed(2));
-        break;
-      case TabValue.QUANTITY:
-        quantity = Number(strNum) > 0 ? total_price / Number(strNum) : 0;
-        form.setValue(TabValue.QUANTITY, quantity.toFixed(2));
-        break;
-    }
-  };
-
-  const handleBlur = (e: any, field: any) => {
-    if (!isNaN(Number(e.target.value))) {
-      field.onChange(Number(e.target.value).toFixed(2));
-    } else {
-      field.onChange("0.00");
-    }
-  };
-
+const UnitPriceFormField = ({
+  form,
+  activeTab,
+}: {
+  form: any;
+  activeTab: string;
+}) => {
   return (
-    <FormField
-      control={form.control}
+    <CustomFormField
+      form={form}
       name={TabValue.UNIT_PRICE}
-      render={({ field }) => (
-        <FormItem>
-          <div className="flex justify-between">
-            <FormLabel>Unit Price</FormLabel>
-            <FormMessage />
-          </div>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-              $
-            </span>
-            <FormControl>
-              <Input
-                className="pl-6"
-                placeholder="0.00"
-                readOnly={TabValue.UNIT_PRICE === value}
-                {...field}
-                onChange={(e) => {
-                  handleChange(e, field);
-                }}
-                onBlur={(e) => {
-                  handleBlur(e, field);
-                }}
-              />
-            </FormControl>
-          </div>
-        </FormItem>
-      )}
+      label="Unit Price ($)"
+      readOnly={activeTab === TabValue.UNIT_PRICE}
+      onChangeCallback={(value, form) => {
+        const total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
+        const quantity = Number(form.getValues(TabValue.QUANTITY));
+        if (activeTab === TabValue.TOTAL_PRICE) {
+          form.setValue(TabValue.TOTAL_PRICE, (value * quantity).toFixed(2));
+        } else if (activeTab === TabValue.QUANTITY) {
+          form.setValue(
+            TabValue.QUANTITY,
+            (value > 0 ? total_price / value : 0).toFixed(2)
+          );
+        }
+      }}
     />
   );
 };
 
-const QuantityFormField = ({ form, value }: { form: any; value: string }) => {
-  const handleChange = (e: any, field: any) => {
-    const strNum = cleanNumber(e.target.value);
-    field.onChange(strNum);
+const QuantityFormField = ({
+  form,
+  activeTab,
+}: {
+  form: any;
+  activeTab: string;
+}) => {
+  return (
+    <CustomFormField
+      form={form}
+      name={TabValue.QUANTITY}
+      label="Quantity"
+      readOnly={activeTab === TabValue.QUANTITY}
+      onChangeCallback={(value, form) => {
+        const unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
+        const total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
+        if (activeTab === TabValue.UNIT_PRICE) {
+          form.setValue(
+            TabValue.UNIT_PRICE,
+            (value > 0 ? total_price / value : 0).toFixed(2)
+          );
+        } else if (activeTab === TabValue.TOTAL_PRICE) {
+          form.setValue(TabValue.TOTAL_PRICE, (unit_price * value).toFixed(2));
+        }
+      }}
+    />
+  );
+};
 
-    let unit_price = Number(form.getValues(TabValue.UNIT_PRICE));
-    let total_price = Number(form.getValues(TabValue.TOTAL_PRICE));
-    switch (value) {
-      case TabValue.UNIT_PRICE:
-        unit_price = Number(strNum) > 0 ? total_price / Number(strNum) : 0;
-        form.setValue(TabValue.UNIT_PRICE, unit_price.toFixed(2));
-        break;
-      case TabValue.TOTAL_PRICE:
-        total_price = unit_price * Number(strNum);
-        form.setValue(TabValue.TOTAL_PRICE, total_price.toFixed(2));
-        break;
-    }
+const CustomFormField = ({
+  form,
+  name,
+  label,
+  readOnly,
+  onChangeCallback,
+}: {
+  form: any;
+  name: string;
+  label: string;
+  prefix?: string;
+  readOnly: boolean;
+  onChangeCallback: (value: number, form: any) => void;
+}) => {
+  const handleChange = (e: any, field: any) => {
+    const cleanValue = cleanNumber(e.target.value);
+    const numericValue = Number(cleanValue);
+    field.onChange(cleanValue);
+    onChangeCallback(numericValue, form);
   };
 
   const handleBlur = (e: any, field: any) => {
-    if (!isNaN(Number(e.target.value))) {
-      field.onChange(Number(e.target.value).toFixed(2));
-    } else {
-      field.onChange(0);
-    }
+    const value = !isNaN(Number(e.target.value))
+      ? Number(e.target.value).toFixed(2)
+      : "0.00";
+    field.onChange(value);
   };
 
   return (
     <FormField
       control={form.control}
-      name={TabValue.QUANTITY}
+      name={name}
       render={({ field }) => (
         <FormItem>
           <div className="flex justify-between">
-            <FormLabel>Quantity</FormLabel>
+            <FormLabel>{label}</FormLabel>
             <FormMessage />
           </div>
-          <FormControl>
-            <Input
-              placeholder="0.00"
-              readOnly={TabValue.QUANTITY === value}
-              {...field}
-              onChange={(e) => {
-                handleChange(e, field);
-              }}
-              onBlur={(e) => {
-                handleBlur(e, field);
-              }}
-            />
-          </FormControl>
+          <div className="relative">
+            <FormControl>
+              <Input
+                placeholder="0.00"
+                readOnly={readOnly}
+                {...field}
+                onChange={(e) => handleChange(e, field)}
+                onBlur={(e) => handleBlur(e, field)}
+              />
+            </FormControl>
+          </div>
         </FormItem>
       )}
     />
