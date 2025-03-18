@@ -17,8 +17,8 @@ export function ProductDrawer() {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
-    await createProduct(e);
     setOpen(false);
+    await createProduct(e);
   };
 
   return (
