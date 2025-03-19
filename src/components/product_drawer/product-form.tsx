@@ -2,19 +2,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Product } from "@/src/db/schema";
+import { toTitleCase } from "@/src/lib/utils";
+import React from "react";
+
+import {
+  FormGroup,
+  FormGroupContent,
+  FormGroupDescription,
+  FormGroupItem,
+  FormGroupLabel,
+} from "../form_group/form-group";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/src/components/ui/form";
-import { Input } from "@/src/components/ui/input";
-import { ProductCalculator } from "./product-calculator";
-import { Product } from "@/src/db/schema";
-import { toTitleCase } from "@/src/lib/utils";
+import { FormGroupInput } from "../form_group/form-group-input";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "../ui/drawer";
+import { Button } from "../ui/button";
+import { ArrowLeftIcon, ChevronRightIcon } from "lucide-react";
 import { DatePicker } from "./product-date-picker";
+import { ProductCalculator } from "./product-calculator";
+import { FormGroupButton } from "../form_group/form-button";
 import {
   Select,
   SelectContent,
@@ -74,110 +92,144 @@ export function ProductForm({
   return (
     <Form {...form}>
       <form
-        className="flex flex-col gap-12 h-full px-4 text-sm"
+        className="flex flex-col gap-6 px-4 text-sm"
         id={id}
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <div className="flex flex-col gap-4">
-          <div className="text-lg">General Information</div>
-          <div className="flex flex-col gap-4">
+        <FormGroup>
+          <FormGroupLabel>General</FormGroupLabel>
+          <FormGroupContent>
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between">
-                    <FormLabel>Name</FormLabel>
-                    <FormMessage />
-                  </div>
+                <FormGroupItem>
                   <FormControl>
-                    <Input placeholder="Enter product name" {...field} />
+                    <FormGroupInput
+                      placeholder="Enter product name"
+                      {...field}
+                    />
                   </FormControl>
-                </FormItem>
+                </FormGroupItem>
               )}
             />
             <FormField
               control={form.control}
               name="store"
               render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between">
-                    <FormLabel>Store</FormLabel>
-                    <FormMessage />
-                  </div>
+                <FormGroupItem>
                   <FormControl>
-                    <Input placeholder="Enter store name" {...field} />
+                    <FormGroupInput placeholder="Enter store name" {...field} />
                   </FormControl>
-                </FormItem>
+                </FormGroupItem>
               )}
             />
+          </FormGroupContent>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupLabel>About</FormGroupLabel>
+          <FormGroupContent>
             <FormField
               control={form.control}
               name="quality"
               render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between">
-                    <FormLabel>Quality</FormLabel>
-                    <FormMessage />
-                  </div>
+                <FormGroupItem>
                   <FormControl>
                     <Select defaultValue="3" onValueChange={field.onChange}>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
                         <SelectValue placeholder="Select quality" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Quality Ratings</SelectLabel>
-                          <SelectItem value="1">1 - Poor</SelectItem>
-                          <SelectItem value="2">2 - Fair</SelectItem>
-                          <SelectItem value="3">3 - Okay</SelectItem>
-                          <SelectItem value="4">4 - Good</SelectItem>
                           <SelectItem value="5">5 - Excellent</SelectItem>
+                          <SelectItem value="4">4 - Good</SelectItem>
+                          <SelectItem value="3">3 - Okay</SelectItem>
+                          <SelectItem value="2">2 - Fair</SelectItem>
+                          <SelectItem value="1">1 - Poor</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormControl>
-                </FormItem>
+                </FormGroupItem>
               )}
             />
+            {/* TODO - turn into a component */}
+            <Drawer dismissible={true} handleOnly={true} direction="right">
+              <DrawerTrigger asChild>
+                <FormGroupButton
+                  className="flex justify-between items-center w-full"
+                  variant={"ghost"}
+                >
+                  <span>Set prices</span>
+                  <ChevronRightIcon className="size-4" />
+                </FormGroupButton>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader className="p-2 flex flex-row items-center">
+                  <div className="w-1/3 justify-start">
+                    <Button className="flex" variant={"ghost"} asChild>
+                      <DrawerClose className="flex">
+                        <ArrowLeftIcon className="size-4" />
+                      </DrawerClose>
+                    </Button>
+                  </div>
+                  <DrawerTitle className="w-1/3 text-center">
+                    Set Prices
+                  </DrawerTitle>
+                  <div className="w-1/3 flex justify-end"></div>
+                </DrawerHeader>
+                <div className="px-4 flex flex-col gap-4 overflow-y-auto no-scrollbar h-full">
+                  <FormGroup>
+                    <FormGroupLabel>Measurement Type</FormGroupLabel>
+                    <FormGroupContent>
+                      <FormField
+                        control={form.control}
+                        name="measurement"
+                        render={({ field }) => (
+                          <FormGroupItem>
+                            <FormControl>
+                              <FormGroupInput
+                                placeholder="Enter measurement type"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormGroupItem>
+                        )}
+                      />
+                    </FormGroupContent>
+                    <FormGroupDescription>
+                      Used for unit prices ($1.00/each) and for quantity values
+                    </FormGroupDescription>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormGroupLabel>Calculator</FormGroupLabel>
+                    <ProductCalculator form={form} />
+                    <FormGroupDescription>
+                      Takes in x and y values to find z
+                    </FormGroupDescription>
+                  </FormGroup>
+                </div>
+              </DrawerContent>
+            </Drawer>
+          </FormGroupContent>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupLabel>Timestamp</FormGroupLabel>
+          <FormGroupContent>
             <FormField
               control={form.control}
               name="date"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex justify-between">
-                    <FormLabel>Date Created</FormLabel>
-                    <FormMessage />
-                  </div>
                   <FormControl>
                     <DatePicker placeholder="Pick a date" {...field} />
                   </FormControl>
                 </FormItem>
               )}
             />
-          </div>
-        </div>
-        <div className="flex flex-col gap-4">
-          <div className="text-lg">Pricing Information</div>
-          <div className="flex flex-col gap-4 pb-4">
-            <FormField
-              control={form.control}
-              name="measurement"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between">
-                    <FormLabel>Measurement</FormLabel>
-                    <FormMessage />
-                  </div>
-                  <FormControl>
-                    <Input placeholder="Enter measurement" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <ProductCalculator form={form} />
-          </div>
-        </div>
+          </FormGroupContent>
+        </FormGroup>
       </form>
     </Form>
   );

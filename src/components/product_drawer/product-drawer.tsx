@@ -1,14 +1,15 @@
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/src/components/ui/drawer";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { ProductForm } from "./product-form";
-import { ArrowLeft } from "lucide-react";
+import { X } from "lucide-react";
 import { createProduct } from "@/src/db/db";
 
 const formId: string = "product-form";
@@ -31,44 +32,33 @@ export function ProductDrawer() {
         if (isOpened !== open) setOpen(isOpened);
       }}
     >
-      <Button
-        variant={"outline"}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        Add product
-      </Button>
+      <DrawerTrigger asChild>
+        <Button variant={"outline"}>Add product</Button>
+      </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="p-2">
-          <DrawerTitle>
+        <DrawerHeader className="p-2 flex flex-row items-center">
+          <div className="w-1/3 justify-start">
+            <DrawerClose asChild>
+              <Button variant={"ghost"}>
+                <X className="size-4" />
+              </Button>
+            </DrawerClose>
+          </div>
+          <DrawerTitle className="w-1/3 text-center">Product</DrawerTitle>
+          <div className="w-1/3 flex justify-end">
             <Button
+              className="text-blue-500 disabled:text-foreground/25"
               variant={"ghost"}
-              size={"icon"}
-              onClick={() => {
-                setOpen(false);
-              }}
+              type={"submit"}
+              form={formId}
             >
-              <ArrowLeft />
+              Create
             </Button>
-          </DrawerTitle>
+          </div>
         </DrawerHeader>
-        <div className="overflow-y-auto no-scrollbar">
+        <div className="overflow-y-auto no-scrollbar pt-4">
           <ProductForm id={formId} onSubmit={handleSubmit} />
         </div>
-        <DrawerFooter className="mb-4">
-          <Button variant={"default"} type={"submit"} form={formId}>
-            Submit
-          </Button>
-          <Button
-            variant={"outline"}
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            Cancel
-          </Button>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
