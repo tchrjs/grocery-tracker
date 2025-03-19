@@ -24,8 +24,8 @@ import {
   FormGroupDescription,
   FormGroupItem,
   FormGroupLabel,
-} from "../form-group/form-group";
-import { FormGroupInput } from "../form-group/form-group-input";
+} from "../form_group/form-group";
+import { FormGroupInput } from "../form_group/form-group-input";
 
 enum TabValue {
   UNIT_PRICE = "unit_price",

@@ -12,14 +12,14 @@ import {
   FormGroupDescription,
   FormGroupItem,
   FormGroupLabel,
-} from "../form-group/form-group";
+} from "../form_group/form-group";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
 } from "@/src/components/ui/form";
-import { FormGroupInput } from "../form-group/form-group-input";
+import { FormGroupInput } from "../form_group/form-group-input";
 import {
   Drawer,
   DrawerClose,
@@ -32,7 +32,7 @@ import { Button } from "../ui/button";
 import { ArrowLeftIcon, ChevronRightIcon } from "lucide-react";
 import { DatePicker } from "./product-date-picker";
 import { ProductCalculator } from "./product-calculator";
-import { FormGroupButton } from "../form-group/form-button";
+import { FormGroupButton } from "../form_group/form-button";
 import {
   Select,
   SelectContent,
@@ -178,7 +178,7 @@ export function ProductForm({
                   </DrawerTitle>
                   <div className="w-1/3 flex justify-end"></div>
                 </DrawerHeader>
-                <div className="px-4 flex flex-col gap-4">
+                <div className="px-4 flex flex-col gap-4 overflow-y-auto no-scrollbar">
                   <FormGroup>
                     <FormGroupLabel>Measurement Type</FormGroupLabel>
                     <FormGroupContent>
