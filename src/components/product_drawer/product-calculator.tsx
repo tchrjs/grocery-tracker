@@ -18,6 +18,14 @@ import {
 } from "../ui/card";
 import { useState } from "react";
 import { Separator } from "../ui/separator";
+import {
+  FormGroup,
+  FormGroupContent,
+  FormGroupDescription,
+  FormGroupItem,
+  FormGroupLabel,
+} from "../form-group/form-group";
+import { FormGroupInput } from "../form-group/form-group-input";
 
 enum TabValue {
   UNIT_PRICE = "unit_price",
@@ -30,9 +38,6 @@ export function ProductCalculator({ form }: { form: any }) {
 
   return (
     <Tabs defaultValue={TabValue.UNIT_PRICE} onValueChange={setActiveTab}>
-      <FormLabel className="pt-2">Cost Calculator</FormLabel>
-      <FormDescription>Takes in x and y values to find z</FormDescription>
-
       <TabsList>
         <TabsTrigger value={TabValue.UNIT_PRICE}>Unit Price</TabsTrigger>
         <TabsTrigger value={TabValue.TOTAL_PRICE}>Total Price</TabsTrigger>
@@ -87,7 +92,7 @@ const CalculationCard = ({
   description: string;
   children: React.ReactNode;
 }) => (
-  <Card>
+  <Card className="py-6 gap-4">
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       <CardDescription>
@@ -95,7 +100,6 @@ const CalculationCard = ({
       </CardDescription>
     </CardHeader>
     <CardContent className="space-y-2">{children}</CardContent>
-    <CardFooter></CardFooter>
   </Card>
 );
 
@@ -218,31 +222,33 @@ const CustomFormField = ({
   };
 
   return (
-    <FormField
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem>
-          <div className="flex justify-between">
-            <FormLabel>{label}</FormLabel>
-            <FormMessage />
-          </div>
-          <div className="relative">
-            <FormControl>
-              <Input
-                placeholder="0.00"
-                readOnly={readOnly}
-                inputMode="decimal"
-                pattern="[0-9]*"
-                {...field}
-                onChange={(e) => handleChange(e, field)}
-                onBlur={(e) => handleBlur(e, field)}
-              />
-            </FormControl>
-          </div>
-        </FormItem>
-      )}
-    />
+    <FormGroup>
+      <FormGroupLabel>{label}</FormGroupLabel>
+      <FormGroupContent>
+        <FormField
+          control={form.control}
+          name={name}
+          render={({ field }) => (
+            <FormGroupItem>
+              <div className="flex justify-between"></div>
+              <div className="relative">
+                <FormControl>
+                  <FormGroupInput
+                    placeholder="0.00"
+                    readOnly={readOnly}
+                    inputMode="decimal"
+                    pattern="[0-9]*"
+                    {...field}
+                    onChange={(e) => handleChange(e, field)}
+                    onBlur={(e) => handleBlur(e, field)}
+                  />
+                </FormControl>
+              </div>
+            </FormGroupItem>
+          )}
+        />
+      </FormGroupContent>
+    </FormGroup>
   );
 };
 
