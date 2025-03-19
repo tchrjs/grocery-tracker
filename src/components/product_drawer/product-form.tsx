@@ -54,6 +54,43 @@ const formSchema = z.object({
   date: z.coerce.date(),
 });
 
+const stores: string[] = [
+  "Albertsons",
+  "Costco",
+  "La Bonita",
+  "Smiths",
+  "Sprouts",
+  "Walmart",
+  "Whole Foods",
+  "WinCo",
+  "Trader Joes",
+  "Aldi",
+  "HMart",
+  "Grocery Outlet",
+];
+
+const nonSpecific = [{ label: "Per Item (each)", value: "each" }];
+
+const solidWeights = [
+  { label: "Milligram (mg)", value: "mg" },
+  { label: "Grams (g)", value: "g" },
+  { label: "Kilograms (kg)", value: "kg" },
+  { label: "Ounce (oz)", value: "oz" },
+  { label: "Pound (lb)", value: "lb" },
+];
+
+const liquidWeights = [
+  { label: "Fluid Ounce (fl oz)", value: "fl oz" },
+  { label: "Quarts (qt)", value: "qt" },
+  { label: "Pints (pt)", value: "pt" },
+  { label: "Gallons (gal)", value: "gal" },
+  { label: "Cups (c)", value: "c" },
+  { label: "Tablespoons (tbsp)", value: "tbsp" },
+  { label: "Teaspoons (tsp)", value: "tsp" },
+  { label: "Liters (L)", value: "L" },
+  { label: "Milliliters (mL)", value: "mL" },
+];
+
 export function ProductForm({
   id,
   onSubmit,
@@ -119,7 +156,24 @@ export function ProductForm({
               render={({ field }) => (
                 <FormGroupItem>
                   <FormControl>
-                    <FormGroupInput placeholder="Enter store name" {...field} />
+                    <Select
+                      defaultValue={stores[0]}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
+                        <SelectValue placeholder="Select store" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Stores</SelectLabel>
+                          {stores.map((store) => (
+                            <SelectItem key={store} value={store}>
+                              {store}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                 </FormGroupItem>
               )}
@@ -189,10 +243,49 @@ export function ProductForm({
                         render={({ field }) => (
                           <FormGroupItem>
                             <FormControl>
-                              <FormGroupInput
-                                placeholder="Enter measurement type"
-                                {...field}
-                              />
+                              <Select
+                                defaultValue="each"
+                                onValueChange={field.onChange}
+                              >
+                                <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
+                                  <SelectValue placeholder="Select measurement" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    <SelectLabel>Non Specific</SelectLabel>
+                                    {nonSpecific.map((item) => (
+                                      <SelectItem
+                                        key={item.value}
+                                        value={item.value}
+                                      >
+                                        {item.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectGroup>
+                                  <SelectGroup>
+                                    <SelectLabel>Mass Measurement</SelectLabel>
+                                    {solidWeights.map((item) => (
+                                      <SelectItem
+                                        key={item.value}
+                                        value={item.value}
+                                      >
+                                        {item.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectGroup>
+                                  <SelectGroup>
+                                    <SelectLabel>Water Measurement</SelectLabel>
+                                    {liquidWeights.map((item) => (
+                                      <SelectItem
+                                        key={item.value}
+                                        value={item.value}
+                                      >
+                                        {item.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
                             </FormControl>
                           </FormGroupItem>
                         )}
