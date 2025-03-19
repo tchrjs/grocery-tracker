@@ -154,6 +154,7 @@ export function ProductForm({
                 </FormGroupItem>
               )}
             />
+            {/* TODO - turn into a component */}
             <Drawer dismissible={true} handleOnly={true} direction="right">
               <DrawerTrigger asChild>
                 <FormGroupButton
@@ -178,7 +179,7 @@ export function ProductForm({
                   </DrawerTitle>
                   <div className="w-1/3 flex justify-end"></div>
                 </DrawerHeader>
-                <div className="px-4 flex flex-col gap-4 overflow-y-auto no-scrollbar">
+                <div className="px-4 flex flex-col gap-4 overflow-y-auto no-scrollbar h-full">
                   <FormGroup>
                     <FormGroupLabel>Measurement Type</FormGroupLabel>
                     <FormGroupContent>

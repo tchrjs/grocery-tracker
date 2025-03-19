@@ -1,18 +1,9 @@
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/src/components/ui/form";
-import { Input } from "@/src/components/ui/input";
+import { FormControl, FormField } from "@/src/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -21,7 +12,6 @@ import { Separator } from "../ui/separator";
 import {
   FormGroup,
   FormGroupContent,
-  FormGroupDescription,
   FormGroupItem,
   FormGroupLabel,
 } from "../form_group/form-group";
