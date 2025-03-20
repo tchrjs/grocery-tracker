@@ -17,9 +17,7 @@ function FormSuggestions({
 
   return (
     <div
-      className={`${
-        focus && filteredSuggestions.length > 0 ? "" : "opacity-0"
-      }`}
+      className={`${focus && filteredSuggestions.length > 0 ? "" : "hidden"}`}
     >
       <div className="absolute rounded-md w-full bg-background border-1 mt-1 p-1 shadow-md flex flex-col z-10">
         {filteredSuggestions.map((suggestion) => (
