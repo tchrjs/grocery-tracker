@@ -14,7 +14,11 @@ import { createProduct } from "@/src/db/db";
 
 const formId: string = "product-form";
 
-export function ProductDrawer() {
+export function ProductDrawer({
+  productNames = [],
+}: {
+  productNames: string[];
+}) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
@@ -57,7 +61,11 @@ export function ProductDrawer() {
           </div>
         </DrawerHeader>
         <div className="overflow-y-auto no-scrollbar pt-4">
-          <ProductForm id={formId} onSubmit={handleSubmit} />
+          <ProductForm
+            id={formId}
+            onSubmit={handleSubmit}
+            productNames={productNames}
+          />
         </div>
       </DrawerContent>
     </Drawer>

@@ -29,6 +29,7 @@ export function DatePicker({ onChange, placeholder }: any) {
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal border-none rounded-none shadow-sm",
+            "dark:bg-input/30 dark:hover:bg-input/50",
             !date && "text-muted-foreground"
           )}
         >
@@ -37,12 +38,7 @@ export function DatePicker({ onChange, placeholder }: any) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleSelect}
-          initialFocus={false}
-        />
+        <Calendar mode="single" selected={date} onSelect={handleSelect} />
       </PopoverContent>
     </Popover>
   );

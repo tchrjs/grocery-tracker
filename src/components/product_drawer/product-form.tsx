@@ -29,7 +29,7 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { Button } from "../ui/button";
-import { ArrowLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ChevronRightIcon, X } from "lucide-react";
 import { DatePicker } from "./product-date-picker";
 import { ProductCalculator } from "./product-calculator";
 import { FormGroupButton } from "../form_group/form-button";
@@ -46,11 +46,11 @@ import {
 const formSchema = z.object({
   name: z.string().min(1, { message: "Required" }),
   store: z.string().min(1, { message: "Required" }),
-  measurement: z.string().min(1, { message: "Required" }),
+  measurement: z.string(),
   total_price: z.string(),
   unit_price: z.string(),
   quantity: z.string(),
-  quality: z.string(),
+  quality: z.string().min(1, { message: "Required" }),
   date: z.coerce.date(),
 });
 
@@ -69,9 +69,9 @@ const stores: string[] = [
   "Grocery Outlet",
 ];
 
-const nonSpecific = [{ label: "Per Item (each)", value: "each" }];
+const nonSpecificMeasurements = [{ label: "Per Item (each)", value: "each" }];
 
-const solidWeights = [
+const weightMeasurements = [
   { label: "Milligram (mg)", value: "mg" },
   { label: "Grams (g)", value: "g" },
   { label: "Kilograms (kg)", value: "kg" },
@@ -79,7 +79,7 @@ const solidWeights = [
   { label: "Pound (lb)", value: "lb" },
 ];
 
-const liquidWeights = [
+const liquidMeasurements = [
   { label: "Fluid Ounce (fl oz)", value: "fl oz" },
   { label: "Quarts (qt)", value: "qt" },
   { label: "Pints (pt)", value: "pt" },
@@ -94,16 +94,18 @@ const liquidWeights = [
 export function ProductForm({
   id,
   onSubmit,
+  productNames = [],
 }: {
   id: string | undefined;
   onSubmit: SubmitHandler<Product>;
+  productNames?: string[];
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       store: "",
-      measurement: "",
+      measurement: "each",
       total_price: "",
       unit_price: "",
       quantity: "",
@@ -143,6 +145,7 @@ export function ProductForm({
                 <FormGroupItem>
                   <FormControl>
                     <FormGroupInput
+                      suggestions={productNames}
                       placeholder="Enter product name"
                       {...field}
                     />
@@ -156,12 +159,9 @@ export function ProductForm({
               render={({ field }) => (
                 <FormGroupItem>
                   <FormControl>
-                    <Select
-                      defaultValue={stores[0]}
-                      onValueChange={field.onChange}
-                    >
+                    <Select onValueChange={field.onChange}>
                       <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
-                        <SelectValue placeholder="Select store" />
+                        <SelectValue placeholder="Select a store" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
@@ -189,7 +189,7 @@ export function ProductForm({
               render={({ field }) => (
                 <FormGroupItem>
                   <FormControl>
-                    <Select defaultValue="3" onValueChange={field.onChange}>
+                    <Select onValueChange={field.onChange}>
                       <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
                         <SelectValue placeholder="Select quality" />
                       </SelectTrigger>
@@ -252,8 +252,10 @@ export function ProductForm({
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectGroup>
-                                    <SelectLabel>Non Specific</SelectLabel>
-                                    {nonSpecific.map((item) => (
+                                    <SelectLabel>
+                                      Non Specific Measurements
+                                    </SelectLabel>
+                                    {nonSpecificMeasurements.map((item) => (
                                       <SelectItem
                                         key={item.value}
                                         value={item.value}
@@ -263,8 +265,10 @@ export function ProductForm({
                                     ))}
                                   </SelectGroup>
                                   <SelectGroup>
-                                    <SelectLabel>Mass Measurement</SelectLabel>
-                                    {solidWeights.map((item) => (
+                                    <SelectLabel>
+                                      Weight Measurements
+                                    </SelectLabel>
+                                    {weightMeasurements.map((item) => (
                                       <SelectItem
                                         key={item.value}
                                         value={item.value}
@@ -274,8 +278,10 @@ export function ProductForm({
                                     ))}
                                   </SelectGroup>
                                   <SelectGroup>
-                                    <SelectLabel>Water Measurement</SelectLabel>
-                                    {liquidWeights.map((item) => (
+                                    <SelectLabel>
+                                      Liquid Measurements
+                                    </SelectLabel>
+                                    {liquidMeasurements.map((item) => (
                                       <SelectItem
                                         key={item.value}
                                         value={item.value}

@@ -14,19 +14,25 @@ import { ProductDrawer } from "../product_drawer/product-drawer";
 import { StarRating } from "./star-rating";
 import { Product } from "@/src/db/schema";
 
-export function ProductTable({ products }: { products: Product[] }) {
+export function ProductTable({
+  products,
+  productNames,
+}: {
+  products: Product[];
+  productNames: string[];
+}) {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
 
   return (
     <div className="flex flex-col py-4 gap-4">
       <div className="w-full px-2 flex justify-between">
         <ProductSearchInput
-          products={products}
+          productNames={productNames}
           onProductSelected={(selected_product: string) => {
             setSelectedProduct(selected_product);
           }}
         />
-        <ProductDrawer />
+        <ProductDrawer productNames={productNames} />
       </div>
       <Table className="text-center">
         <TableHeader>
@@ -50,7 +56,11 @@ export function ProductTable({ products }: { products: Product[] }) {
                   <TableCell>{`$${product.unit_price.toFixed(2)}/${
                     product.measurement
                   }`}</TableCell>
-                  <TableCell>{`${product.quantity} ${product.measurement}`}</TableCell>
+                  <TableCell>{`${product.quantity} ${product.measurement}${
+                    product.measurement == "lb" && product.quantity != 1
+                      ? "s"
+                      : ""
+                  }`}</TableCell>
                   <TableCell>
                     <StarRating value={product.quality} />
                   </TableCell>

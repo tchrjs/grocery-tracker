@@ -1,6 +1,9 @@
 import React from "react";
 import { FormDescription, FormItem, FormLabel } from "../ui/form";
 import { Separator } from "../ui/separator";
+import { cn } from "@/src/lib/utils";
+import { FieldError } from "react-hook-form";
+import { Check, X } from "lucide-react";
 
 function FormGroup({
   children,
@@ -38,7 +41,7 @@ function FormGroupContent({
   children?: React.ReactNode;
 }>) {
   return (
-    <div className="bg-transparent rounded-md border-1 overflow-hidden">
+    <div className="bg-transparent rounded-md border-1">
       {React.Children.map(children, (child, index) => (
         <>
           {index > 0 && <Separator />}
@@ -51,11 +54,17 @@ function FormGroupContent({
 
 function FormGroupItem({
   children,
+  className,
 }: Readonly<{
   children?: React.ReactNode;
+  className?: string;
 }>) {
   return (
-    <FormItem className="gap-0 dark:hover:bg-input/50">{children}</FormItem>
+    <FormItem
+      className={cn("gap-0 dark:hover:bg-input/50 relative", className)}
+    >
+      {children}
+    </FormItem>
   );
 }
 

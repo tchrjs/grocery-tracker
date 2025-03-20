@@ -18,18 +18,16 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { useState } from "react";
-import { Product } from "@/src/db/schema";
 
 export function ProductSearchInput({
-  products,
+  productNames,
   onProductSelected,
 }: {
-  products: Product[];
+  productNames: string[];
   onProductSelected: Function;
 }) {
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const labels = Array.from(new Set(products.map((product) => product.name)));
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -50,10 +48,10 @@ export function ProductSearchInput({
           <CommandList>
             <CommandEmpty>No products found</CommandEmpty>
             <CommandGroup>
-              {labels.map((label, i) => (
+              {productNames.map((name, i) => (
                 <CommandItem
                   key={i}
-                  value={label}
+                  value={name}
                   onSelect={(currentValue) => {
                     const product = currentValue === value ? "" : currentValue;
                     setValue(product);
@@ -61,11 +59,11 @@ export function ProductSearchInput({
                     setOpen(false);
                   }}
                 >
-                  {label}
+                  {name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === label ? "opacity-100" : "opacity-0"
+                      value === name ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
