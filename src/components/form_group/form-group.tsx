@@ -2,8 +2,6 @@ import React from "react";
 import { FormDescription, FormItem, FormLabel } from "../ui/form";
 import { Separator } from "../ui/separator";
 import { cn } from "@/src/lib/utils";
-import { FieldError } from "react-hook-form";
-import { Check, X } from "lucide-react";
 
 function FormGroup({
   children,

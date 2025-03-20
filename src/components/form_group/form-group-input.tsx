@@ -5,22 +5,19 @@ import { FormSuggestions } from "./form-suggestions";
 
 function FormGroupInput({
   suggestions = [],
+  onChange = () => {},
   ...props
 }: React.ComponentProps<"input"> & {
   suggestions?: string[];
+  onChange?: (e: any) => void;
 }) {
   const [focus, setFocus] = useState(false);
   const [value, setValue] = useState("");
 
-  const handleSuggestionChange = (suggestion: string) => {
-    setFocus(suggestion != "");
-    setValue(suggestion);
-  };
-
-  const handleBlur = () => {
-    setTimeout(() => {
-      setFocus(false);
-    }, 150);
+  const handleSuggestionChange = (e: any) => {
+    setFocus(e.target.value != "");
+    setValue(e.target.value);
+    onChange(e);
   };
 
   return (
@@ -28,33 +25,30 @@ function FormGroupInput({
       <Input
         {...props}
         autoComplete="off"
-        value={value}
         onFocus={() => setFocus(value != "")}
-        onBlur={handleBlur}
+        onBlur={() => {
+          setTimeout(() => {
+            setFocus(false);
+          }, 150);
+        }}
         onClick={() => setFocus(value != "")}
         onKeyDown={(e) => {
           if (e.key == "Enter") {
             setFocus(false);
           }
         }}
-        onChange={(e) => {
-          console.log(e);
-          handleSuggestionChange(e.target.value);
-        }}
+        onChange={handleSuggestionChange}
         className={cn(
           "rounded-none shadow-none border-none hover:bg-accent hover:text-accent-foreground",
           "focus-visible:border-none focus-visible:ring-0"
         )}
       />
-
-      <div className={`${focus ? "" : "hidden"}`}>
-        <FormSuggestions
-          suggestions={suggestions}
-          onSuggestionClick={async (value) => {
-            handleSuggestionChange(value);
-          }}
-        ></FormSuggestions>
-      </div>
+      <FormSuggestions
+        focus={focus}
+        suggestions={suggestions}
+        filterValue={value}
+        onSuggestionClick={handleSuggestionChange}
+      ></FormSuggestions>
     </div>
   );
 }
