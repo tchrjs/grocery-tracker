@@ -14,8 +14,8 @@ import {
   FormGroupContent,
   FormGroupItem,
   FormGroupLabel,
-} from "../form_group/form-group";
-import { FormGroupInput } from "../form_group/form-group-input";
+} from "../form_ui/form-group";
+import { SuggestionsInput } from "../suggestions/suggestions-input";
 
 enum TabValue {
   UNIT_PRICE = "unit_price",
@@ -33,7 +33,6 @@ export function ProductCalculator({ form }: { form: any }) {
         <TabsTrigger value={TabValue.TOTAL_PRICE}>Total Price</TabsTrigger>
         <TabsTrigger value={TabValue.QUANTITY}>Quantity</TabsTrigger>
       </TabsList>
-
       <TabsContent value={TabValue.UNIT_PRICE}>
         <CalculationCard
           title="Calculate Unit Price"
@@ -45,7 +44,6 @@ export function ProductCalculator({ form }: { form: any }) {
           <UnitPriceFormField form={form} activeTab={activeTab} />
         </CalculationCard>
       </TabsContent>
-
       <TabsContent value={TabValue.TOTAL_PRICE}>
         <CalculationCard
           title="Calculate Total Price"
@@ -57,7 +55,6 @@ export function ProductCalculator({ form }: { form: any }) {
           <TotalPriceFormField form={form} activeTab={activeTab} />
         </CalculationCard>
       </TabsContent>
-
       <TabsContent value={TabValue.QUANTITY}>
         <CalculationCard
           title="Calculate Quantity"
@@ -223,7 +220,7 @@ const CustomFormField = ({
               <div className="flex justify-between"></div>
               <div className="relative">
                 <FormControl>
-                  <FormGroupInput
+                  <SuggestionsInput
                     placeholder="0.00"
                     readOnly={readOnly}
                     inputMode="decimal"

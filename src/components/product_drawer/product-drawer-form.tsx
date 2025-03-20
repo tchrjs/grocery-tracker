@@ -12,14 +12,14 @@ import {
   FormGroupDescription,
   FormGroupItem,
   FormGroupLabel,
-} from "../form_group/form-group";
+} from "../form_ui/form-group";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
 } from "@/src/components/ui/form";
-import { FormGroupInput } from "../form_group/form-group-input";
+import { SuggestionsInput } from "../suggestions/suggestions-input";
 import {
   Drawer,
   DrawerClose,
@@ -32,7 +32,7 @@ import { Button } from "../ui/button";
 import { ArrowLeftIcon, ChevronRightIcon, X } from "lucide-react";
 import { DatePicker } from "./product-date-picker";
 import { ProductCalculator } from "./product-calculator";
-import { FormGroupButton } from "../form_group/form-button";
+import { FormGroupButton } from "../form_ui/form-group-button";
 import {
   Select,
   SelectContent,
@@ -42,6 +42,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+
+interface ProductDrawerFormProps {
+  id: string | undefined;
+  onSubmit: SubmitHandler<Product>;
+  productNames?: string[];
+}
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Required" }),
@@ -91,15 +97,9 @@ const liquidMeasurements = [
   { label: "Milliliters (mL)", value: "mL" },
 ];
 
-export function ProductForm({
-  id,
-  onSubmit,
-  productNames = [],
-}: {
-  id: string | undefined;
-  onSubmit: SubmitHandler<Product>;
-  productNames?: string[];
-}) {
+function ProductDrawerForm(props: ProductDrawerFormProps) {
+  const { id, onSubmit, productNames } = props;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -144,7 +144,7 @@ export function ProductForm({
               render={({ field }) => (
                 <FormGroupItem>
                   <FormControl>
-                    <FormGroupInput
+                    <SuggestionsInput
                       suggestions={productNames}
                       placeholder="Enter product name"
                       {...field}
@@ -333,3 +333,5 @@ export function ProductForm({
     </Form>
   );
 }
+
+export { ProductDrawerForm };

@@ -8,17 +8,15 @@ import {
 } from "@/src/components/ui/drawer";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { ProductForm } from "./product-form";
+import { ProductDrawerForm } from "./product-drawer-form";
 import { X } from "lucide-react";
 import { createProduct } from "@/src/db/db";
 
-const formId: string = "product-form";
-
-export function ProductDrawer({
-  productNames = [],
-}: {
+interface ProductDrawerProps {
   productNames: string[];
-}) {
+}
+
+export function ProductDrawer({ productNames = [] }: ProductDrawerProps) {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
@@ -54,15 +52,15 @@ export function ProductDrawer({
               className="text-blue-500 disabled:text-foreground/25"
               variant={"ghost"}
               type={"submit"}
-              form={formId}
+              form={"product-form"}
             >
               Create
             </Button>
           </div>
         </DrawerHeader>
         <div className="overflow-y-auto no-scrollbar pt-4">
-          <ProductForm
-            id={formId}
+          <ProductDrawerForm
+            id={"product-form"}
             onSubmit={handleSubmit}
             productNames={productNames}
           />

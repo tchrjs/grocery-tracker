@@ -8,29 +8,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/components/ui/table";
-import { ProductSearchInput } from "./product-search-input";
+import { ProductTableSearch } from "./product-table-search";
 import { useState } from "react";
 import { ProductDrawer } from "../product_drawer/product-drawer";
-import { StarRating } from "./star-rating";
 import { Product } from "@/src/db/schema";
+import { ProductOptions } from "../product_options/product-options";
+import { Star } from "lucide-react";
 
-export function ProductTable({
-  products,
-  productNames,
-}: {
+interface ProductTableProps {
   products: Product[];
   productNames: string[];
-}) {
+}
+
+function ProductTable({ products, productNames }: ProductTableProps) {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+
+  const handleProductSelected = (selectedProduct: string) => {
+    setSelectedProduct(selectedProduct);
+  };
 
   return (
     <div className="flex flex-col py-4 gap-4">
       <div className="w-full px-2 flex justify-between">
-        <ProductSearchInput
+        <ProductTableSearch
           productNames={productNames}
-          onProductSelected={(selected_product: string) => {
-            setSelectedProduct(selected_product);
-          }}
+          onProductSelected={handleProductSelected}
         />
         <ProductDrawer productNames={productNames} />
       </div>
@@ -62,9 +64,23 @@ export function ProductTable({
                       : ""
                   }`}</TableCell>
                   <TableCell>
-                    <StarRating value={product.quality} />
+                    <div className="flex justify-center items-center">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3 h-3 ${
+                            i < product.quality
+                              ? "text-foreground fill-foreground"
+                              : "text-foreground"
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </TableCell>
                   <TableCell>{product.date}</TableCell>
+                  <TableCell className="px-4">
+                    <ProductOptions />
+                  </TableCell>
                 </TableRow>
               ))
           ) : (
@@ -82,3 +98,5 @@ export function ProductTable({
     </div>
   );
 }
+
+export { ProductTable };

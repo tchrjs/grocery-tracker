@@ -6,7 +6,6 @@ import {
   real,
   date,
 } from "drizzle-orm/pg-core";
-import { QualityRating } from "../components/product_table/star-rating";
 import { InferSelectModel } from "drizzle-orm";
 
 export const products = pgTable("products", {
@@ -26,5 +25,5 @@ export type Product = Omit<
   "id" | "quality"
 > & {
   id?: number;
-  quality: QualityRating;
+  quality: number;
 };

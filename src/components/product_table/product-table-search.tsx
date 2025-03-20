@@ -19,13 +19,14 @@ import {
 } from "@/src/components/ui/popover";
 import { useState } from "react";
 
-export function ProductSearchInput({
-  productNames,
-  onProductSelected,
-}: {
+interface ProductTableSearchProps {
   productNames: string[];
-  onProductSelected: Function;
-}) {
+  onProductSelected: (selectedProduct: string) => void;
+}
+
+function ProductTableSearch(props: ProductTableSearchProps) {
+  const { productNames, onProductSelected = () => {} } = props;
+
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
 
@@ -75,3 +76,5 @@ export function ProductSearchInput({
     </Popover>
   );
 }
+
+export { ProductTableSearch };
