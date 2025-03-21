@@ -24,8 +24,8 @@ function ProductOptions({ product }: ProductOptionsProps) {
   };
 
   const handleDelete = async () => {
-    await deleteProductById(Number(product.id));
     setOpen(false);
+    await deleteProductById(Number(product.id));
   };
 
   return (
