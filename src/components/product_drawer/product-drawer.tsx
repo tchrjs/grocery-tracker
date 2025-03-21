@@ -8,21 +8,34 @@ import {
   DrawerTrigger,
 } from "@/src/components/ui/drawer";
 import { Button } from "../ui/button";
-import { useState } from "react";
 import { ProductDrawerForm } from "./product-drawer-form";
-import { X } from "lucide-react";
-import { createProduct } from "@/src/db/db";
+import { createProduct, updateProduct } from "@/src/db/db";
+import { Product } from "@/src/db/schema";
 
 interface ProductDrawerProps {
+  type?: "create" | "edit";
   productNames: string[];
+  defaultProduct?: Product | undefined;
+  open?: boolean;
+  onExit?: () => void;
 }
 
-export function ProductDrawer({ productNames = [] }: ProductDrawerProps) {
-  const [open, setOpen] = useState<boolean>(false);
+export function ProductDrawer(props: ProductDrawerProps) {
+  const {
+    type = "create",
+    open,
+    productNames = [],
+    defaultProduct,
+    onExit = () => {},
+  } = props;
 
   const handleSubmit = async (e: any) => {
-    setOpen(false);
-    await createProduct(e);
+    if (type == "create") {
+      await createProduct(e);
+    } else if (type == "edit") {
+      await updateProduct(e);
+    }
+    onExit();
   };
 
   return (
@@ -32,22 +45,27 @@ export function ProductDrawer({ productNames = [] }: ProductDrawerProps) {
       handleOnly={true}
       open={open}
       onOpenChange={(isOpened) => {
-        if (isOpened !== open) setOpen(isOpened);
+        if (!isOpened) onExit();
       }}
     >
-      <DrawerTrigger asChild>
-        <Button variant={"outline"}>Add product</Button>
-      </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="p-2 flex flex-row items-center">
           <div className="w-1/3 justify-start">
-            <DrawerClose asChild>
-              <Button variant={"ghost"}>
-                <X className="size-4" />
-              </Button>
-            </DrawerClose>
+            <Button
+              className="text-foreground/50"
+              variant={"ghost"}
+              onClick={onExit}
+            >
+              Cancel
+            </Button>
           </div>
-          <DrawerTitle className="w-1/3 text-center">Product</DrawerTitle>
+          <DrawerTitle className="w-1/3 text-center">
+            {type == "create"
+              ? "Create Product"
+              : type == "edit"
+              ? "Edit Product"
+              : ""}
+          </DrawerTitle>
           <div className="w-1/3 flex justify-end">
             <Button
               className="text-blue-500 disabled:text-foreground/25"
@@ -55,7 +73,7 @@ export function ProductDrawer({ productNames = [] }: ProductDrawerProps) {
               type={"submit"}
               form={"product-form"}
             >
-              Create
+              {type == "create" ? "Create" : type == "edit" ? "Confirm" : ""}
             </Button>
           </div>
           <DrawerDescription className="hidden" />
@@ -65,6 +83,7 @@ export function ProductDrawer({ productNames = [] }: ProductDrawerProps) {
             id={"product-form"}
             onSubmit={handleSubmit}
             productNames={productNames}
+            defaultProduct={defaultProduct}
           />
         </div>
       </DrawerContent>

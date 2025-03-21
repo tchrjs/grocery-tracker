@@ -14,6 +14,7 @@ import { ProductDrawer } from "../product_drawer/product-drawer";
 import { Product } from "@/src/db/schema";
 import { ProductOptions } from "../product_options/product-options";
 import { Star } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface ProductTableProps {
   products: Product[];
@@ -22,6 +23,7 @@ interface ProductTableProps {
 
 function ProductTable({ products, productNames }: ProductTableProps) {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleProductSelected = (selectedProduct: string) => {
     setSelectedProduct(selectedProduct);
@@ -34,7 +36,21 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           productNames={productNames}
           onProductSelected={handleProductSelected}
         />
-        <ProductDrawer productNames={productNames} />
+        <ProductDrawer
+          open={drawerOpen}
+          productNames={productNames}
+          onExit={() => {
+            setDrawerOpen(false);
+          }}
+        />
+        <Button
+          onClick={() => {
+            setDrawerOpen(true);
+          }}
+          variant={"outline"}
+        >
+          Add product
+        </Button>
       </div>
       <Table className="text-center">
         <TableHeader>

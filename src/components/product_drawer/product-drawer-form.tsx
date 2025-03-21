@@ -48,6 +48,7 @@ interface ProductDrawerFormProps {
   id: string | undefined;
   onSubmit: SubmitHandler<Product>;
   productNames?: string[];
+  defaultProduct?: Product;
 }
 
 const formSchema = z.object({
@@ -99,24 +100,27 @@ const liquidMeasurements = [
 ];
 
 function ProductDrawerForm(props: ProductDrawerFormProps) {
-  const { id, onSubmit, productNames } = props;
+  const { id, onSubmit, productNames, defaultProduct } = props;
+
+  const defaultValues = {
+    name: defaultProduct?.name ?? "",
+    store: defaultProduct?.store ?? "",
+    measurement: defaultProduct?.measurement ?? "each",
+    total_price: defaultProduct?.total_price.toString().toLowerCase() ?? "",
+    unit_price: defaultProduct?.unit_price.toString().toLowerCase() ?? "",
+    quantity: defaultProduct?.quantity.toString().toLowerCase() ?? "",
+    quality: defaultProduct?.quality.toString().toLowerCase() ?? "",
+    date: new Date(),
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      store: "",
-      measurement: "each",
-      total_price: "",
-      unit_price: "",
-      quantity: "",
-      quality: "",
-      date: new Date(),
-    },
+    defaultValues: defaultValues,
   });
 
   const handleSubmit = (e: z.infer<typeof formSchema>) => {
     const product: Product = {
+      id: defaultProduct?.id ?? undefined,
       name: toTitleCase(e.name),
       store: e.store,
       total_price: Number(e.total_price),
@@ -160,7 +164,10 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
               render={({ field }) => (
                 <FormGroupItem>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={defaultValues.store}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
                         <SelectValue placeholder="Select a store" />
                       </SelectTrigger>
@@ -190,7 +197,10 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
               render={({ field }) => (
                 <FormGroupItem>
                   <FormControl>
-                    <Select onValueChange={field.onChange}>
+                    <Select
+                      defaultValue={defaultValues.quality}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
                         <SelectValue placeholder="Select quality" />
                       </SelectTrigger>
@@ -246,7 +256,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
                           <FormGroupItem>
                             <FormControl>
                               <Select
-                                defaultValue="each"
+                                defaultValue={defaultValues.measurement}
                                 onValueChange={field.onChange}
                               >
                                 <SelectTrigger className="w-full rounded-none border-none shadow-none hover:bg-accent hover:text-accent-foreground">
@@ -324,7 +334,11 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <DatePicker placeholder="Pick a date" {...field} />
+                    <DatePicker
+                      placeholder="Pick a date"
+                      defaultDate={defaultValues.date}
+                      {...field}
+                    />
                   </FormControl>
                 </FormItem>
               )}

@@ -13,8 +13,8 @@ import {
 } from "@/src/components/ui/popover";
 import { useState } from "react";
 
-export function DatePicker({ onChange, placeholder }: any) {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+export function DatePicker({ onChange, placeholder, defaultDate }: any) {
+  const [date, setDate] = useState<Date | undefined>(defaultDate);
 
   const handleSelect = (value: Date | undefined) => {
     if (value === undefined) value = date;

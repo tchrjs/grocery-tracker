@@ -25,3 +25,9 @@ export async function deleteProductById(productId: number): Promise<void> {
   await db.delete(products).where(eq(products.id, productId));
   revalidatePath("/");
 }
+
+export async function updateProduct(product: Product) {
+  if (!product.id) return;
+  await db.update(products).set(product).where(eq(products.id, product.id));
+  revalidatePath("/");
+}

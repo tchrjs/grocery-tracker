@@ -11,20 +11,24 @@ import { Product } from "@/src/db/schema";
 import { DeleteAlertDialog } from "./delete-alert-dialog";
 import { useState } from "react";
 import { deleteProductById } from "@/src/db/db";
+import { ProductDrawer } from "../product_drawer/product-drawer";
 
 interface ProductOptionsProps {
   product: Product;
+  productNames?: string[];
 }
 
-function ProductOptions({ product }: ProductOptionsProps) {
-  const [open, setOpen] = useState(false);
+function ProductOptions(props: ProductOptionsProps) {
+  const { product, productNames = [] } = props;
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleCancel = () => {
-    setOpen(false);
+    setAlertOpen(false);
   };
 
   const handleDelete = async () => {
-    setOpen(false);
+    setAlertOpen(false);
     await deleteProductById(Number(product.id));
   };
 
@@ -37,11 +41,17 @@ function ProductOptions({ product }: ProductOptionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="-translate-x-2" sideOffset={0}>
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setDrawerOpen(true);
+            }}
+          >
+            Edit
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              setOpen(true);
+              setAlertOpen(true);
             }}
           >
             Delete
@@ -49,9 +59,18 @@ function ProductOptions({ product }: ProductOptionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <DeleteAlertDialog
-        open={open}
+        open={alertOpen}
         onCancel={handleCancel}
         onDelete={handleDelete}
+      />
+      <ProductDrawer
+        onExit={() => {
+          setDrawerOpen(false);
+        }}
+        type="edit"
+        open={drawerOpen}
+        productNames={productNames}
+        defaultProduct={product}
       />
     </>
   );

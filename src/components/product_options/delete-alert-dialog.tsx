@@ -8,7 +8,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/src/components/ui/alert-dialog";
-import { useRouter } from "next/navigation";
 
 interface DeleteAlertDialogProps {
   open: boolean;
@@ -27,8 +26,8 @@ function DeleteAlertDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            This action cannot be undone. This will permanently delete this
+            product from our database.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
