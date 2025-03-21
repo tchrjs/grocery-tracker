@@ -2,6 +2,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -57,6 +58,7 @@ export function ProductDrawer({ productNames = [] }: ProductDrawerProps) {
               Create
             </Button>
           </div>
+          <DrawerDescription className="hidden" />
         </DrawerHeader>
         <div className="overflow-y-auto no-scrollbar pt-4">
           <ProductDrawerForm

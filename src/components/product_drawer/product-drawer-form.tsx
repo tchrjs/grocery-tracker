@@ -24,6 +24,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -233,6 +234,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
                   </DrawerTitle>
                   <div className="w-1/3 flex justify-end"></div>
                 </DrawerHeader>
+                <DrawerDescription className="hidden" />
                 <div className="px-4 flex flex-col gap-4 overflow-y-auto no-scrollbar h-full">
                   <FormGroup>
                     <FormGroupLabel>Measurement Type</FormGroupLabel>

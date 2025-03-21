@@ -45,6 +45,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
             <TableHead>Quantity</TableHead>
             <TableHead>Quality</TableHead>
             <TableHead>Last Updated</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -78,8 +79,8 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>{product.date}</TableCell>
-                  <TableCell className="px-4">
-                    <ProductOptions />
+                  <TableCell>
+                    <ProductOptions product={product} />
                   </TableCell>
                 </TableRow>
               ))

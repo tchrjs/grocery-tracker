@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from ".";
 import { Product, products } from "./schema";
+import { eq } from "drizzle-orm";
 
 export async function getProducts(): Promise<Product[]> {
   return await db.select().from(products);
@@ -18,4 +19,9 @@ export async function getProductNames(): Promise<string[]> {
     .selectDistinct({ name: products.name })
     .from(products);
   return result.map((row) => row.name);
+}
+
+export async function deleteProductById(productId: number): Promise<void> {
+  await db.delete(products).where(eq(products.id, productId));
+  revalidatePath("/");
 }
