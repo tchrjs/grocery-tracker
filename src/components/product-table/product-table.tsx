@@ -10,9 +10,9 @@ import {
 } from "@/src/components/ui/table";
 import { ProductTableSearch } from "./product-table-search";
 import { useState } from "react";
-import { ProductDrawer } from "../product_drawer/product-drawer";
+import { ProductDrawer } from "../product-drawer/product-drawer";
 import { Product } from "@/src/db/schema";
-import { ProductOptions } from "../product_options/product-options";
+import { ProductOptions } from "../product-options/product-options";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
 

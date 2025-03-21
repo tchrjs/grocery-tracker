@@ -1,4 +1,4 @@
-import { ProductTable } from "@/src/components/product_table/product-table";
+import { ProductTable } from "@/src/components/product-table/product-table";
 import { Product } from "../db/schema";
 import { getProductNames, getProducts } from "../db/db";
 

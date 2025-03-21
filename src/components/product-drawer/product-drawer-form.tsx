@@ -12,7 +12,7 @@ import {
   FormGroupDescription,
   FormGroupItem,
   FormGroupLabel,
-} from "../form_ui/form-group";
+} from "../form-ui/form-group";
 import {
   Form,
   FormControl,
@@ -33,7 +33,7 @@ import { Button } from "../ui/button";
 import { ArrowLeftIcon, ChevronRightIcon, X } from "lucide-react";
 import { DatePicker } from "./product-date-picker";
 import { ProductCalculator } from "./product-calculator";
-import { FormGroupButton } from "../form_ui/form-group-button";
+import { FormGroupButton } from "../form-ui/form-group-button";
 import {
   Select,
   SelectContent,

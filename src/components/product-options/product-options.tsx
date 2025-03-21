@@ -11,7 +11,7 @@ import { Product } from "@/src/db/schema";
 import { DeleteAlertDialog } from "./delete-alert-dialog";
 import { useState } from "react";
 import { deleteProductById } from "@/src/db/db";
-import { ProductDrawer } from "../product_drawer/product-drawer";
+import { ProductDrawer } from "../product-drawer/product-drawer";
 
 interface ProductOptionsProps {
   product: Product;

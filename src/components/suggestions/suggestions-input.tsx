@@ -1,7 +1,7 @@
 import { cn } from "@/src/lib/utils";
 import { Input } from "../ui/input";
 import { useState } from "react";
-import AreaDetector from "../area_detector/area-detector";
+import AreaDetector from "../area-detector/area-detector";
 import { SuggestionsPopover } from "./suggestions-popover";
 
 interface SuggestionsInputProps extends React.ComponentProps<"input"> {
