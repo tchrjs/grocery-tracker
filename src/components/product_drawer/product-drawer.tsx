@@ -1,11 +1,9 @@
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/src/components/ui/drawer";
 import { Button } from "../ui/button";
 import { ProductDrawerForm } from "./product-drawer-form";
