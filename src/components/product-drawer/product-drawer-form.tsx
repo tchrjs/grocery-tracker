@@ -121,7 +121,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
   const handleSubmit = (e: z.infer<typeof formSchema>) => {
     const product: Product = {
       id: defaultProduct?.id ?? undefined,
-      name: toTitleCase(e.name),
+      name: toTitleCase(e.name).trim(),
       store: e.store,
       total_price: Number(e.total_price),
       unit_price: Number(e.unit_price),
@@ -209,8 +209,8 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
                           <SelectLabel>Quality Ratings</SelectLabel>
                           <SelectItem value="5">5 - Excellent</SelectItem>
                           <SelectItem value="4">4 - Good</SelectItem>
-                          <SelectItem value="3">3 - Okay</SelectItem>
-                          <SelectItem value="2">2 - Fair</SelectItem>
+                          <SelectItem value="3">3 - Fair</SelectItem>
+                          <SelectItem value="2">2 - Okay</SelectItem>
                           <SelectItem value="1">1 - Poor</SelectItem>
                         </SelectGroup>
                       </SelectContent>
