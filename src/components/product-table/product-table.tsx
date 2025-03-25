@@ -100,104 +100,74 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           Add product
         </Button>
       </div>
-      <Table className="text-center">
+      <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("store")}
-                >
-                  Store
-                  {activeFilter == "store" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-35">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("store")}
+              >
+                <span className="pr-2">Store</span>
+                {activeFilter === "store" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("total_price")}
-                >
-                  Price
-                  {activeFilter == "total_price" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("total_price")}
+              >
+                <span className="pr-2">Price</span>
+                {activeFilter === "total_price" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("unit_price")}
-                >
-                  Unit
-                  {activeFilter == "unit_price" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("unit_price")}
+              >
+                <span className="pr-2">Unit</span>
+                {activeFilter === "unit_price" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("quantity")}
-                >
-                  Quantity
-                  {activeFilter == "quantity" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("quantity")}
+              >
+                <span className="pr-2">Quantity</span>
+                {activeFilter === "quantity" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("quality")}
-                >
-                  Quality
-                  {activeFilter == "quality" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center "
+                onClick={() => handleSort("quality")}
+              >
+                <span className="pr-2">Quality</span>
+                {activeFilter === "quality" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("date")}
-                >
-                  Last Updated
-                  {activeFilter == "date" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-35">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("date")}
+              >
+                <span className="pr-2">Last Updated</span>
+                {activeFilter === "date" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
             <TableHead></TableHead>
           </TableRow>
@@ -217,7 +187,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                     : ""
                 }`}</TableCell>
                 <TableCell>
-                  <div className="flex justify-center items-center">
+                  <div className="flex items-center">
                     {Array.from({ length: 5 }, (_, i) => (
                       <Star
                         key={i}
