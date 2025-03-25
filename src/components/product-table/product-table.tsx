@@ -9,14 +9,12 @@ import {
   TableRow,
 } from "@/src/components/ui/table";
 import { ProductTableSearch } from "./product-table-search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductDrawer } from "../product-drawer/product-drawer";
 import { Product } from "@/src/db/schema";
 import { ProductOptions } from "../product-options/product-options";
 import { ArrowUp, Star } from "lucide-react";
 import { Button } from "../ui/button";
-
-type SortingOrder = "asc" | "dsc";
 
 interface ProductTableProps {
   products: Product[];
@@ -31,7 +29,13 @@ function ProductTable({ products, productNames }: ProductTableProps) {
   const [activeFilter, setActiveFilter] = useState<keyof Product>("store");
   const [filteredProducts, setFilteredProduct] = useState<Product[]>([]);
 
-  const handleProductSelected = (selectedProduct: string) => {
+  const currentDate = new Date();
+
+  useEffect(() => {
+    handleProductSelected(selectedProduct);
+  }, [products, activeFilter, isAsc]);
+
+  const handleProductSelected = (selectedProduct: string | null) => {
     setSelectedProduct(selectedProduct);
     const array = products.filter((product) => product.name == selectedProduct);
     filterProduct(array, activeFilter, isAsc);
@@ -50,6 +54,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
     switch (col) {
       case "name":
       case "store":
+      case "date":
         list.sort((a, b) => {
           const valueA = a[col];
           const valueB = b[col];
@@ -70,8 +75,6 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           const valueB = Number(b[col]);
           return isAsc ? valueA - valueB : valueB - valueA;
         });
-        break;
-      case "date":
         break;
     }
 
@@ -101,104 +104,79 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           Add product
         </Button>
       </div>
-      <Table className="text-center">
+      <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("store")}
-                >
-                  Store
-                  {activeFilter == "store" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-35">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("store")}
+              >
+                <span className="pr-2">Store</span>
+                {activeFilter === "store" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("total_price")}
-                >
-                  Price
-                  {activeFilter == "total_price" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("total_price")}
+              >
+                <span className="pr-2">Price</span>
+                {activeFilter === "total_price" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("unit_price")}
-                >
-                  Unit
-                  {activeFilter == "unit_price" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("unit_price")}
+              >
+                <span className="pr-2">Unit</span>
+                {activeFilter === "unit_price" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("quantity")}
-                >
-                  Quantity
-                  {activeFilter == "quantity" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("quantity")}
+              >
+                <span className="pr-2">Quantity</span>
+                {activeFilter === "quantity" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("quality")}
-                >
-                  Quality
-                  {activeFilter == "quality" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-30">
+              <button
+                className="flex justify-between w-full items-center "
+                onClick={() => handleSort("quality")}
+              >
+                <span className="pr-2">Quality</span>
+                {activeFilter === "quality" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
             </TableHead>
-            <TableHead>
-              <div className="flex justify-center items-center">
-                <Button
-                  variant={"ghost"}
-                  className="flex w-full"
-                  onClick={() => handleSort("date")}
-                >
-                  Last Updated
-                  {activeFilter == "date" ? (
-                    <ArrowUp className={`${isAsc ? "" : "rotate-180"}`} />
-                  ) : (
-                    <></>
-                  )}
-                </Button>
-              </div>
+            <TableHead className="min-w-35">
+              <button
+                className="flex justify-between w-full items-center"
+                onClick={() => handleSort("date")}
+              >
+                <span className="pr-2">Last Updated</span>
+                {activeFilter === "date" && (
+                  <ArrowUp className={`size-4 ${isAsc ? "" : "rotate-180"}`} />
+                )}
+              </button>
+            </TableHead>
+            <TableHead className="min-w-35">
+              <span className="flex justify-between w-full items-center pr-2">
+                Sale End Date
+              </span>
             </TableHead>
             <TableHead></TableHead>
           </TableRow>
@@ -206,7 +184,16 @@ function ProductTable({ products, productNames }: ProductTableProps) {
         <TableBody>
           {filteredProducts &&
             filteredProducts.map((product, i) => (
-              <TableRow key={i}>
+              <TableRow
+                key={i}
+                className={
+                  !product.sale || !product.sale_date
+                    ? ""
+                    : currentDate > new Date(product.sale_date)
+                    ? "bg-red-500 text-background"
+                    : "bg-green-500 text-background"
+                }
+              >
                 <TableCell>{product.store}</TableCell>
                 <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
                 <TableCell>{`$${product.unit_price.toFixed(2)}/${
@@ -218,13 +205,15 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                     : ""
                 }`}</TableCell>
                 <TableCell>
-                  <div className="flex justify-center items-center">
+                  <div className="flex items-center">
                     {Array.from({ length: 5 }, (_, i) => (
                       <Star
                         key={i}
                         className={`w-3 h-3 ${
                           i < product.quality
-                            ? "text-foreground fill-foreground"
+                            ? product.sale && product.sale_date
+                              ? "text-background fill-background"
+                              : "text-foreground fill-foreground"
                             : ""
                         }`}
                       />
@@ -232,6 +221,9 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>{product.date}</TableCell>
+                <TableCell>
+                  {product.sale && product.sale_date ? product.sale_date : ""}
+                </TableCell>
                 <TableCell>
                   <ProductOptions product={product} />
                 </TableCell>
