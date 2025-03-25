@@ -38,16 +38,7 @@ function FormGroupContent({
 }: Readonly<{
   children?: React.ReactNode;
 }>) {
-  return (
-    <div className="bg-transparent rounded-md border-1">
-      {React.Children.map(children, (child, index) => (
-        <>
-          {index > 0 && <Separator />}
-          {child}
-        </>
-      ))}
-    </div>
-  );
+  return <div className="bg-transparent rounded-md border-1">{children}</div>;
 }
 
 function FormGroupItem({

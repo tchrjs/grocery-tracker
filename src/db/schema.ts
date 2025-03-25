@@ -5,6 +5,7 @@ import {
   integer,
   real,
   date,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { InferSelectModel } from "drizzle-orm";
 
@@ -18,6 +19,8 @@ export const products = pgTable("products", {
   quantity: real().notNull(),
   quality: integer().notNull(),
   date: date(),
+  sale: boolean(),
+  sale_date: date(),
 });
 
 export type Product = Omit<

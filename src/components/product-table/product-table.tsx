@@ -9,14 +9,12 @@ import {
   TableRow,
 } from "@/src/components/ui/table";
 import { ProductTableSearch } from "./product-table-search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductDrawer } from "../product-drawer/product-drawer";
 import { Product } from "@/src/db/schema";
 import { ProductOptions } from "../product-options/product-options";
 import { ArrowUp, Star } from "lucide-react";
 import { Button } from "../ui/button";
-
-type SortingOrder = "asc" | "dsc";
 
 interface ProductTableProps {
   products: Product[];
@@ -31,7 +29,13 @@ function ProductTable({ products, productNames }: ProductTableProps) {
   const [activeFilter, setActiveFilter] = useState<keyof Product>("store");
   const [filteredProducts, setFilteredProduct] = useState<Product[]>([]);
 
-  const handleProductSelected = (selectedProduct: string) => {
+  const currentDate = new Date();
+
+  useEffect(() => {
+    handleProductSelected(selectedProduct);
+  }, [products, activeFilter, isAsc]);
+
+  const handleProductSelected = (selectedProduct: string | null) => {
     setSelectedProduct(selectedProduct);
     const array = products.filter((product) => product.name == selectedProduct);
     filterProduct(array, activeFilter, isAsc);
@@ -169,13 +173,27 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                 )}
               </button>
             </TableHead>
+            <TableHead className="min-w-35">
+              <span className="flex justify-between w-full items-center pr-2">
+                Sale End Date
+              </span>
+            </TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredProducts &&
             filteredProducts.map((product, i) => (
-              <TableRow key={i}>
+              <TableRow
+                key={i}
+                className={
+                  !product.sale || !product.sale_date
+                    ? ""
+                    : currentDate > new Date(product.sale_date)
+                    ? "bg-red-500 text-background"
+                    : "bg-green-500 text-background"
+                }
+              >
                 <TableCell>{product.store}</TableCell>
                 <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
                 <TableCell>{`$${product.unit_price.toFixed(2)}/${
@@ -193,7 +211,9 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                         key={i}
                         className={`w-3 h-3 ${
                           i < product.quality
-                            ? "text-foreground fill-foreground"
+                            ? product.sale && product.sale_date
+                              ? "text-background fill-background"
+                              : "text-foreground fill-foreground"
                             : ""
                         }`}
                       />
@@ -201,6 +221,9 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>{product.date}</TableCell>
+                <TableCell>
+                  {product.sale && product.sale_date ? product.sale_date : ""}
+                </TableCell>
                 <TableCell>
                   <ProductOptions product={product} />
                 </TableCell>

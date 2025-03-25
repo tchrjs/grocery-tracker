@@ -13,7 +13,12 @@ import {
 } from "@/src/components/ui/popover";
 import { useState } from "react";
 
-export function DatePicker({ onChange, placeholder, defaultDate }: any) {
+export function DatePicker({
+  onChange,
+  placeholder,
+  defaultDate,
+  disabled,
+}: any) {
   const [date, setDate] = useState<Date | undefined>(defaultDate);
 
   const handleSelect = (value: Date | undefined) => {
@@ -26,6 +31,7 @@ export function DatePicker({ onChange, placeholder, defaultDate }: any) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal border-none rounded-none shadow-sm",

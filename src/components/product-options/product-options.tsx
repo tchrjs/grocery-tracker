@@ -13,6 +13,7 @@ import { useState } from "react";
 import { deleteProductById, updateProduct } from "@/src/db/db";
 import { ProductDrawer } from "../product-drawer/product-drawer";
 import { ConfirmAlertDialog } from "./confirm-alert-dialog";
+import { revalidatePath } from "next/cache";
 
 interface ProductOptionsProps {
   product: Product;

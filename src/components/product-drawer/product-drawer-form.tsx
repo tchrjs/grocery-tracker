@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { Product } from "@/src/db/schema";
 import { toTitleCase } from "@/src/lib/utils";
-import React from "react";
+import React, { useState } from "react";
 
 import {
   FormGroup,
@@ -16,8 +16,10 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
 } from "@/src/components/ui/form";
 import { SuggestionsInput } from "../suggestions/suggestions-input";
 import {
@@ -43,6 +45,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Switch } from "../ui/switch";
 
 interface ProductDrawerFormProps {
   id: string | undefined;
@@ -60,6 +63,8 @@ const formSchema = z.object({
   quantity: z.string(),
   quality: z.string().min(1, { message: "Required" }),
   date: z.coerce.date(),
+  sale: z.boolean(),
+  sale_date: z.coerce.date(),
 });
 
 const stores: string[] = [
@@ -111,12 +116,18 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
     quantity: defaultProduct?.quantity.toString().toLowerCase() ?? "",
     quality: defaultProduct?.quality.toString().toLowerCase() ?? "",
     date: new Date(),
+    sale: defaultProduct?.sale ?? false,
+    sale_date: defaultProduct?.sale_date
+      ? new Date(defaultProduct?.sale_date)
+      : new Date(),
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
+
+  const [onSale, setOnSale] = useState(false);
 
   const handleSubmit = (e: z.infer<typeof formSchema>) => {
     const product: Product = {
@@ -129,6 +140,10 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
       quantity: Number(e.quantity),
       quality: Number(e.quality),
       date: e.date.toDateString(),
+      sale: e.sale,
+      sale_date: e.sale
+        ? e.sale_date.toDateString()
+        : new Date().toDateString(),
     };
     onSubmit(product);
   };
@@ -344,6 +359,58 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
               )}
             />
           </FormGroupContent>
+        </FormGroup>
+        <FormGroup>
+          <FormGroupLabel>Sale</FormGroupLabel>
+          <FormGroupContent>
+            <FormField
+              control={form.control}
+              name="sale"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel>On Sale</FormLabel>
+                    <FormDescription>
+                      <span>Is this product currently on sale?</span>
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={(checked: boolean) => {
+                        setOnSale(checked);
+                        field.onChange(checked);
+                      }}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <div className={`${onSale ? "" : "hidden"}`}>
+              <FormField
+                control={form.control}
+                name="sale_date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <DatePicker
+                        placeholder="Pick sale end date"
+                        defaultDate={defaultValues.sale_date}
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </FormGroupContent>
+          {onSale ? (
+            <FormGroupDescription>
+              Set end date, or set to today if none.
+            </FormGroupDescription>
+          ) : (
+            ""
+          )}
         </FormGroup>
       </form>
     </Form>
