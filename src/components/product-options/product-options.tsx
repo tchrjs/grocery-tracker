@@ -10,8 +10,9 @@ import { Button } from "../ui/button";
 import { Product } from "@/src/db/schema";
 import { DeleteAlertDialog } from "./delete-alert-dialog";
 import { useState } from "react";
-import { deleteProductById } from "@/src/db/db";
+import { deleteProductById, updateProduct } from "@/src/db/db";
 import { ProductDrawer } from "../product-drawer/product-drawer";
+import { ConfirmAlertDialog } from "./confirm-alert-dialog";
 
 interface ProductOptionsProps {
   product: Product;
@@ -20,16 +21,23 @@ interface ProductOptionsProps {
 
 function ProductOptions(props: ProductOptionsProps) {
   const { product, productNames = [] } = props;
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+  const [confirmAlertOpen, setConfirmAlertOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleCancel = () => {
-    setAlertOpen(false);
+    setConfirmAlertOpen(false);
+    setDeleteAlertOpen(false);
   };
 
   const handleDelete = async () => {
-    setAlertOpen(false);
+    setDeleteAlertOpen(false);
     await deleteProductById(Number(product.id));
+  };
+
+  const handleConfirm = async () => {
+    setConfirmAlertOpen(false);
+    await updateProduct({ ...product, date: new Date().toDateString() });
   };
 
   return (
@@ -51,17 +59,30 @@ function ProductOptions(props: ProductOptionsProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
-              setAlertOpen(true);
+              setDeleteAlertOpen(true);
             }}
           >
             Delete
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setConfirmAlertOpen(true);
+            }}
+          >
+            Confirm
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <DeleteAlertDialog
-        open={alertOpen}
+        open={deleteAlertOpen}
         onCancel={handleCancel}
         onDelete={handleDelete}
+      />
+      <ConfirmAlertDialog
+        open={confirmAlertOpen}
+        onCancel={handleCancel}
+        onConfirm={handleConfirm}
       />
       <ProductDrawer
         onExit={() => {
