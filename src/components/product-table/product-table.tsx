@@ -50,6 +50,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
     switch (col) {
       case "name":
       case "store":
+      case "date":
         list.sort((a, b) => {
           const valueA = a[col];
           const valueB = b[col];
@@ -70,8 +71,6 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           const valueB = Number(b[col]);
           return isAsc ? valueA - valueB : valueB - valueA;
         });
-        break;
-      case "date":
         break;
     }
 
