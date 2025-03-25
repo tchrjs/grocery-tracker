@@ -28,12 +28,12 @@ export function ProductDrawer(props: ProductDrawerProps) {
   } = props;
 
   const handleSubmit = async (e: any) => {
+    onExit();
     if (type == "create") {
       await createProduct(e);
     } else if (type == "edit") {
       await updateProduct(e);
     }
-    onExit();
   };
 
   return (
