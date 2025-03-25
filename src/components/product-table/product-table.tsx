@@ -30,6 +30,8 @@ function ProductTable({ products, productNames }: ProductTableProps) {
   const [filteredProducts, setFilteredProduct] = useState<Product[]>([]);
 
   const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  currentDate.setDate(currentDate.getDate() - 1);
 
   useEffect(() => {
     handleProductSelected(selectedProduct);

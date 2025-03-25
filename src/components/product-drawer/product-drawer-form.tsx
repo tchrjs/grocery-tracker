@@ -107,6 +107,12 @@ const liquidMeasurements = [
 function ProductDrawerForm(props: ProductDrawerFormProps) {
   const { id, onSubmit, productNames, defaultProduct } = props;
 
+  let saleDate = null;
+  if (defaultProduct?.sale_date) {
+    saleDate = new Date(defaultProduct.sale_date);
+    saleDate.setDate(saleDate.getDate() + 1);
+  }
+
   const defaultValues = {
     name: defaultProduct?.name ?? "",
     store: defaultProduct?.store ?? "",
@@ -117,9 +123,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
     quality: defaultProduct?.quality.toString().toLowerCase() ?? "",
     date: new Date(),
     sale: defaultProduct?.sale ?? false,
-    sale_date: defaultProduct?.sale_date
-      ? new Date(defaultProduct?.sale_date)
-      : new Date(),
+    sale_date: saleDate ?? new Date(),
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -127,7 +131,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
     defaultValues: defaultValues,
   });
 
-  const [onSale, setOnSale] = useState(false);
+  const [onSale, setOnSale] = useState(defaultValues.sale);
 
   const handleSubmit = (e: z.infer<typeof formSchema>) => {
     const product: Product = {
@@ -377,6 +381,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
                   <FormControl>
                     <Switch
                       checked={field.value}
+                      defaultChecked={defaultValues.sale}
                       onCheckedChange={(checked: boolean) => {
                         setOnSale(checked);
                         field.onChange(checked);
