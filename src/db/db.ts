@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from ".";
-import { Product, products } from "./schema";
+import { Product, products, uniqueProductNames } from "./schema";
 import { eq } from "drizzle-orm";
 
 export async function getProducts(): Promise<Product[]> {
@@ -14,12 +14,12 @@ export async function createProduct(newProduct: Product) {
   revalidatePath("/");
 }
 
-export async function getProductNames(): Promise<string[]> {
-  const result = await db
-    .selectDistinct({ name: products.name })
-    .from(products)
-    .orderBy(products.name);
-  return result.map((row) => row.name);
+export async function getUniqueProductNames(): Promise<string[]> {
+  const data = await db
+    .select({ name: uniqueProductNames.name })
+    .from(uniqueProductNames)
+    .orderBy(uniqueProductNames.name);
+  return data.map((item) => item.name);
 }
 
 export async function deleteProductById(productId: number): Promise<void> {

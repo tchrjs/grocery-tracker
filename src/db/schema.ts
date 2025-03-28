@@ -30,3 +30,7 @@ export type Product = Omit<
   id?: number;
   quality: number;
 };
+
+export const uniqueProductNames = pgTable("unique_product_names", {
+  name: text("name").notNull(),
+});

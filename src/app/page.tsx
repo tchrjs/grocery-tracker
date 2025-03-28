@@ -1,6 +1,6 @@
 import { ProductTable } from "@/src/components/product-table/product-table";
 import { Product } from "../db/schema";
-import { getProductNames, getProducts } from "../db/db";
+import { getProducts, getUniqueProductNames } from "../db/db";
 
 interface Suggestions {
   names?: string[];
@@ -8,7 +8,7 @@ interface Suggestions {
 
 export default async function Home() {
   let products: Product[] = await getProducts();
-  let productNames: string[] = await getProductNames();
+  let productNames: string[] = await getUniqueProductNames();
 
   return (
     <div>
