@@ -103,7 +103,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           }}
           variant={"outline"}
         >
-          Add product
+          Create Product
         </Button>
       </div>
       <Table>

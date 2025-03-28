@@ -1,8 +1,8 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 
-import { cn } from "@/src/lib/utils";
+import { cn, toTitleCase } from "@/src/lib/utils";
 import { Button } from "@/src/components/ui/button";
 import {
   Command,
@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { useState } from "react";
+import { CommandSeparator } from "cmdk";
 
 interface ProductTableSearchProps {
   productNames: string[];
@@ -28,6 +29,7 @@ function ProductTableSearch(props: ProductTableSearchProps) {
   const { productNames, onProductSelected = () => {} } = props;
 
   const [open, setOpen] = useState<boolean>(false);
+  const [selected, setSelected] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
   return (
@@ -39,15 +41,17 @@ function ProductTableSearch(props: ProductTableSearchProps) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value ? value : "Select product..."}
+          {selected ? selected : "Select product..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search product..." />
+          <CommandInput
+            placeholder="Search product..."
+            onValueChange={setValue}
+          />
           <CommandList>
-            <CommandEmpty>No products found</CommandEmpty>
             <CommandGroup>
               {productNames.map((name, i) => (
                 <CommandItem
@@ -55,7 +59,7 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                   value={name}
                   onSelect={(currentValue) => {
                     const product = currentValue === value ? "" : currentValue;
-                    setValue(product);
+                    setSelected(product);
                     onProductSelected(product);
                     setOpen(false);
                   }}
@@ -70,6 +74,24 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                 </CommandItem>
               ))}
             </CommandGroup>
+            {value != "" && !productNames.includes(toTitleCase(value)) ? (
+              <CommandGroup forceMount={true}>
+                <CommandItem
+                  forceMount={true}
+                  onSelect={() => {
+                    let newSelected = toTitleCase(value);
+                    setSelected(newSelected);
+                    onProductSelected(newSelected);
+                    setOpen(false);
+                  }}
+                >
+                  <Plus />
+                  <div className="opacity-0">placholder</div>
+                </CommandItem>
+              </CommandGroup>
+            ) : (
+              ""
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

@@ -2,7 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from ".";
-import { Product, products, uniqueProductNames } from "./schema";
+import {
+  extraProductNames,
+  Product,
+  products,
+  uniqueProductNames,
+} from "./schema";
 import { eq } from "drizzle-orm";
 
 export async function getProducts(): Promise<Product[]> {
@@ -11,6 +16,20 @@ export async function getProducts(): Promise<Product[]> {
 
 export async function createProduct(newProduct: Product) {
   await db.insert(products).values(newProduct);
+  revalidatePath("/");
+}
+
+export async function insertProductName(name: string) {
+  const existing = await db
+    .select({ name: extraProductNames.name })
+    .from(extraProductNames)
+    .where(eq(extraProductNames.name, name));
+
+  if (existing.length > 0) {
+    return;
+  }
+
+  await db.insert(extraProductNames).values({ name });
   revalidatePath("/");
 }
 

@@ -34,3 +34,7 @@ export type Product = Omit<
 export const uniqueProductNames = pgTable("unique_product_names", {
   name: text("name").notNull(),
 });
+
+export const extraProductNames = pgTable("extra_product_names", {
+  name: text("name").notNull(),
+});
