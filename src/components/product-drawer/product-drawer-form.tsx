@@ -52,6 +52,7 @@ interface ProductDrawerFormProps {
   onSubmit: SubmitHandler<Product>;
   productNames?: string[];
   defaultProduct?: Product;
+  selectedProduct?: string;
 }
 
 const formSchema = z.object({
@@ -105,7 +106,7 @@ const liquidMeasurements = [
 ];
 
 function ProductDrawerForm(props: ProductDrawerFormProps) {
-  const { id, onSubmit, productNames, defaultProduct } = props;
+  const { id, onSubmit, productNames, defaultProduct, selectedProduct } = props;
 
   let saleDate = null;
   if (defaultProduct?.sale_date) {
@@ -114,7 +115,7 @@ function ProductDrawerForm(props: ProductDrawerFormProps) {
   }
 
   const defaultValues = {
-    name: defaultProduct?.name ?? "",
+    name: defaultProduct?.name ?? selectedProduct,
     store: defaultProduct?.store ?? "",
     measurement: defaultProduct?.measurement ?? "each",
     total_price: defaultProduct?.total_price.toString().toLowerCase() ?? "",

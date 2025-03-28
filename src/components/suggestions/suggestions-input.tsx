@@ -1,6 +1,6 @@
 import { cn } from "@/src/lib/utils";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AreaDetector from "../area-detector/area-detector";
 import { SuggestionsPopover } from "./suggestions-popover";
 
@@ -11,6 +11,7 @@ interface SuggestionsInputProps extends React.ComponentProps<"input"> {
 
 function SuggestionsInput(props: SuggestionsInputProps) {
   const { suggestions = [], onChange = () => {}, ...inputProps } = props;
+  const ref = useRef<HTMLDivElement>(null);
 
   const [focus, setFocus] = useState(false);
   const [value, setValue] = useState("");
@@ -28,10 +29,14 @@ function SuggestionsInput(props: SuggestionsInputProps) {
   };
 
   return (
-    <AreaDetector onClickOutside={() => setFocus(false)}>
+    <AreaDetector
+      ref={ref}
+      className="w-full"
+      onClickOutside={() => setFocus(false)}
+    >
       <Input
         className={cn(
-          "rounded-none shadow-none border-none hover:bg-accent hover:text-accent-foreground",
+          "relative rounded-none shadow-none border-none hover:bg-accent hover:text-accent-foreground",
           "focus-visible:border-none focus-visible:ring-0"
         )}
         {...inputProps}
@@ -42,6 +47,7 @@ function SuggestionsInput(props: SuggestionsInputProps) {
         onChange={handleSuggestionChange}
       />
       <SuggestionsPopover
+        parentRef={ref}
         focus={focus}
         suggestions={suggestions.filter((suggestion) =>
           suggestion.toLowerCase().includes(value.toLowerCase())

@@ -8,7 +8,7 @@ function FormGroup({
 }: Readonly<{
   children?: React.ReactNode;
 }>) {
-  return <div>{children}</div>;
+  return <div className="overflow-hidden">{children}</div>;
 }
 
 function FormGroupLabel({
@@ -38,7 +38,11 @@ function FormGroupContent({
 }: Readonly<{
   children?: React.ReactNode;
 }>) {
-  return <div className="bg-transparent rounded-md border-1">{children}</div>;
+  return (
+    <div className="bg-transparent rounded-md border-1 overflow-hidden">
+      {children}
+    </div>
+  );
 }
 
 function FormGroupItem({
@@ -50,7 +54,10 @@ function FormGroupItem({
 }>) {
   return (
     <FormItem
-      className={cn("gap-0 dark:hover:bg-input/50 relative", className)}
+      className={cn(
+        "gap-0 dark:hover:bg-input/50 relative overflow-hidden",
+        className
+      )}
     >
       {children}
     </FormItem>

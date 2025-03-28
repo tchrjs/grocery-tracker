@@ -15,6 +15,7 @@ interface ProductDrawerProps {
   type?: "create" | "edit";
   productNames: string[];
   defaultProduct?: Product | undefined;
+  selectedProduct?: string;
   open?: boolean;
   onExit?: () => void;
 }
@@ -25,6 +26,7 @@ export function ProductDrawer(props: ProductDrawerProps) {
     open,
     productNames = [],
     defaultProduct,
+    selectedProduct,
     onExit = () => {},
   } = props;
 
@@ -82,6 +84,7 @@ export function ProductDrawer(props: ProductDrawerProps) {
             id={"product-form"}
             onSubmit={handleSubmit}
             productNames={productNames}
+            selectedProduct={selectedProduct}
             defaultProduct={defaultProduct}
           />
         </div>

@@ -1,37 +1,44 @@
-import React, { useRef, useEffect, ReactNode } from "react";
+import React, { useRef, useEffect, ReactNode, Ref, RefObject } from "react";
 
 type Props = {
   children: ReactNode;
+  className?: string;
   onClickInside?: () => void;
   onClickOutside?: () => void;
+  ref: RefObject<HTMLDivElement | null>;
 };
 
-const AreaDetector = ({ children, onClickInside, onClickOutside }: Props) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
+const AreaDetector = ({
+  children,
+  className,
+  onClickInside,
+  onClickOutside,
+  ref,
+}: Props) => {
   const handleClickInside = () => {
     onClickInside?.();
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (
-      wrapperRef.current &&
-      !wrapperRef.current.contains(event.target as Node)
-    ) {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
       onClickOutside?.();
     }
   };
 
   useEffect(() => {
-    wrapperRef.current?.addEventListener("click", handleClickInside);
-    document.addEventListener("mousedown", handleClickOutside);
+    ref.current?.addEventListener("click", handleClickInside);
+    document.addEventListener("pointerdown", handleClickOutside);
     return () => {
-      wrapperRef.current?.removeEventListener("click", handleClickInside);
-      document.removeEventListener("mousedown", handleClickOutside);
+      ref.current?.removeEventListener("click", handleClickInside);
+      document.removeEventListener("pointerdown", handleClickOutside);
     };
   }, [onClickInside, onClickOutside]);
 
-  return <div ref={wrapperRef}>{children}</div>;
+  return (
+    <div className={className} ref={ref}>
+      {children}
+    </div>
+  );
 };
 
 export default AreaDetector;

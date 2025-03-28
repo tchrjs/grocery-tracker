@@ -22,7 +22,7 @@ interface ProductTableProps {
 }
 
 function ProductTable({ products, productNames }: ProductTableProps) {
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [isAsc, setAsc] = useState<boolean>(true);
@@ -37,7 +37,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
     handleProductSelected(selectedProduct);
   }, [products, activeFilter, isAsc]);
 
-  const handleProductSelected = (selectedProduct: string | null) => {
+  const handleProductSelected = (selectedProduct: string) => {
     setSelectedProduct(selectedProduct);
     const array = products.filter((product) => product.name == selectedProduct);
     filterProduct(array, activeFilter, isAsc);
@@ -93,6 +93,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
         <ProductDrawer
           open={drawerOpen}
           productNames={productNames}
+          selectedProduct={selectedProduct}
           onExit={() => {
             setDrawerOpen(false);
           }}

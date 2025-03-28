@@ -19,6 +19,7 @@ import {
 } from "@/src/components/ui/popover";
 import { useState } from "react";
 import { CommandSeparator } from "cmdk";
+import { insertProductName } from "@/src/db/db";
 
 interface ProductTableSearchProps {
   productNames: string[];
@@ -33,7 +34,13 @@ function ProductTableSearch(props: ProductTableSearchProps) {
   const [value, setValue] = useState<string>("");
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(toggled_on) => {
+        setOpen(toggled_on);
+        setValue("");
+      }}
+    >
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -78,11 +85,12 @@ function ProductTableSearch(props: ProductTableSearchProps) {
               <CommandGroup forceMount={true}>
                 <CommandItem
                   forceMount={true}
-                  onSelect={() => {
+                  onSelect={async () => {
                     let newSelected = toTitleCase(value);
                     setSelected(newSelected);
                     onProductSelected(newSelected);
                     setOpen(false);
+                    await insertProductName(newSelected);
                   }}
                 >
                   <Plus />
