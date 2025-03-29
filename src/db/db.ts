@@ -33,6 +33,11 @@ export async function insertProductName(name: string) {
   revalidatePath("/");
 }
 
+export async function removeProductName(name: string) {
+  await db.delete(extraProductNames).where(eq(extraProductNames.name, name));
+  revalidatePath("/");
+}
+
 export async function getUniqueProductNames(): Promise<string[]> {
   const data = await db
     .select({ name: uniqueProductNames.name })

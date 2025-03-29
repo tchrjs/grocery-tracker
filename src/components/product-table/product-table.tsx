@@ -15,6 +15,7 @@ import { Product } from "@/src/db/schema";
 import { ProductOptions } from "../product-options/product-options";
 import { ArrowUp, Star } from "lucide-react";
 import { Button } from "../ui/button";
+import { removeProductName } from "@/src/db/db";
 
 interface ProductTableProps {
   products: Product[];
@@ -88,6 +89,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
       <div className="w-full px-2 flex justify-between">
         <ProductTableSearch
           productNames={productNames}
+          selectedProduct={selectedProduct}
           onProductSelected={handleProductSelected}
         />
         <ProductDrawer
@@ -253,6 +255,19 @@ function ProductTable({ products, productNames }: ProductTableProps) {
       {!selectedProduct ? (
         <div className="text-muted-foreground mt-4 text-sm text-center">
           Select a product
+        </div>
+      ) : filteredProducts.length <= 0 ? (
+        <div className="flex w-full justify-center items-center">
+          <Button
+            variant={"secondary"}
+            className="w-48"
+            onClick={() => {
+              removeProductName(selectedProduct);
+              setSelectedProduct("");
+            }}
+          >
+            Remove Product Table
+          </Button>
         </div>
       ) : (
         <></>

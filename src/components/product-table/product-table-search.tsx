@@ -24,13 +24,13 @@ import { insertProductName } from "@/src/db/db";
 interface ProductTableSearchProps {
   productNames: string[];
   onProductSelected: (selectedProduct: string) => void;
+  selectedProduct: string;
 }
 
 function ProductTableSearch(props: ProductTableSearchProps) {
-  const { productNames, onProductSelected = () => {} } = props;
+  const { productNames, onProductSelected = () => {}, selectedProduct } = props;
 
   const [open, setOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
   return (
@@ -48,7 +48,7 @@ function ProductTableSearch(props: ProductTableSearchProps) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {selected ? selected : "Select product..."}
+          {selectedProduct ? selectedProduct : "Select product..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -66,7 +66,6 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                   value={name}
                   onSelect={(currentValue) => {
                     const product = currentValue === value ? "" : currentValue;
-                    setSelected(product);
                     onProductSelected(product);
                     setOpen(false);
                   }}
@@ -87,7 +86,6 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                   forceMount={true}
                   onSelect={async () => {
                     let newSelected = toTitleCase(value);
-                    setSelected(newSelected);
                     onProductSelected(newSelected);
                     setOpen(false);
                     await insertProductName(newSelected);
