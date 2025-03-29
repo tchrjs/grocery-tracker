@@ -13,6 +13,7 @@ export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   name: text().notNull(),
   store: text().notNull(),
+  available: boolean(),
   total_price: real().notNull(),
   unit_price: real().notNull(),
   measurement: text().notNull(),
@@ -30,3 +31,11 @@ export type Product = Omit<
   id?: number;
   quality: number;
 };
+
+export const uniqueProductNames = pgTable("unique_product_names", {
+  name: text("name").notNull(),
+});
+
+export const extraProductNames = pgTable("extra_product_names", {
+  name: text("name").notNull(),
+});

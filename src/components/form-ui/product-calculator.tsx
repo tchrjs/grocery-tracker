@@ -14,7 +14,7 @@ import {
   FormGroupContent,
   FormGroupItem,
   FormGroupLabel,
-} from "../form-ui/form-group";
+} from "./form-group";
 import { SuggestionsInput } from "../suggestions/suggestions-input";
 
 enum TabValue {

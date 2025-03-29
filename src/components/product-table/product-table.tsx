@@ -15,6 +15,7 @@ import { Product } from "@/src/db/schema";
 import { ProductOptions } from "../product-options/product-options";
 import { ArrowUp, Star } from "lucide-react";
 import { Button } from "../ui/button";
+import { removeProductName } from "@/src/db/db";
 
 interface ProductTableProps {
   products: Product[];
@@ -22,7 +23,7 @@ interface ProductTableProps {
 }
 
 function ProductTable({ products, productNames }: ProductTableProps) {
-  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [isAsc, setAsc] = useState<boolean>(true);
@@ -37,7 +38,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
     handleProductSelected(selectedProduct);
   }, [products, activeFilter, isAsc]);
 
-  const handleProductSelected = (selectedProduct: string | null) => {
+  const handleProductSelected = (selectedProduct: string) => {
     setSelectedProduct(selectedProduct);
     const array = products.filter((product) => product.name == selectedProduct);
     filterProduct(array, activeFilter, isAsc);
@@ -88,11 +89,13 @@ function ProductTable({ products, productNames }: ProductTableProps) {
       <div className="w-full px-2 flex justify-between">
         <ProductTableSearch
           productNames={productNames}
+          selectedProduct={selectedProduct}
           onProductSelected={handleProductSelected}
         />
         <ProductDrawer
           open={drawerOpen}
           productNames={productNames}
+          selectedProduct={selectedProduct}
           onExit={() => {
             setDrawerOpen(false);
           }}
@@ -103,7 +106,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           }}
           variant={"outline"}
         >
-          Add product
+          Create Product
         </Button>
       </div>
       <Table>
@@ -197,34 +200,50 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                 }
               >
                 <TableCell>{product.store}</TableCell>
-                <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
-                <TableCell>{`$${product.unit_price.toFixed(2)}/${
-                  product.measurement
-                }`}</TableCell>
-                <TableCell>{`${product.quantity} ${product.measurement}${
-                  product.measurement == "lb" && product.quantity != 1
-                    ? "s"
-                    : ""
-                }`}</TableCell>
                 <TableCell>
-                  <div className="flex items-center">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${
-                          i < product.quality
-                            ? product.sale && product.sale_date
-                              ? "text-background fill-background"
-                              : "text-foreground fill-foreground"
-                            : ""
-                        }`}
-                      />
-                    ))}
-                  </div>
+                  {product.available
+                    ? `$${product.total_price.toFixed(2)}`
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {product.available
+                    ? `$${product.unit_price.toFixed(2)}/${product.measurement}`
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {product.available
+                    ? `${product.quantity} ${product.measurement}${
+                        product.measurement == "lb" && product.quantity != 1
+                          ? "s"
+                          : ""
+                      }`
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {product.available ? (
+                    <div className="flex items-center">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3 h-3 ${
+                            i < product.quality
+                              ? product.sale && product.sale_date
+                                ? "text-background fill-background"
+                                : "text-foreground fill-foreground"
+                              : ""
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    "-"
+                  )}
                 </TableCell>
                 <TableCell>{product.date}</TableCell>
                 <TableCell>
-                  {product.sale && product.sale_date ? product.sale_date : ""}
+                  {product.available && product.sale && product.sale_date
+                    ? product.sale_date
+                    : "-"}
                 </TableCell>
                 <TableCell>
                   <ProductOptions product={product} />
@@ -236,6 +255,19 @@ function ProductTable({ products, productNames }: ProductTableProps) {
       {!selectedProduct ? (
         <div className="text-muted-foreground mt-4 text-sm text-center">
           Select a product
+        </div>
+      ) : filteredProducts.length <= 0 ? (
+        <div className="flex w-full justify-center items-center">
+          <Button
+            variant={"secondary"}
+            className="w-48"
+            onClick={() => {
+              removeProductName(selectedProduct);
+              setSelectedProduct("");
+            }}
+          >
+            Remove Product Table
+          </Button>
         </div>
       ) : (
         <></>

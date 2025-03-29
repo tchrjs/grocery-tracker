@@ -6,25 +6,26 @@ import {
   DrawerTitle,
 } from "@/src/components/ui/drawer";
 import { Button } from "../ui/button";
-import { ProductDrawerForm } from "./product-drawer-form";
+import { ProductForm } from "../product-form/product-form";
 import { createProduct, updateProduct } from "@/src/db/db";
 import { Product } from "@/src/db/schema";
-import { revalidatePath } from "next/cache";
 
-interface ProductDrawerProps {
+interface ProductProps {
   type?: "create" | "edit";
   productNames: string[];
   defaultProduct?: Product | undefined;
+  selectedProduct?: string;
   open?: boolean;
   onExit?: () => void;
 }
 
-export function ProductDrawer(props: ProductDrawerProps) {
+export function ProductDrawer(props: ProductProps) {
   const {
     type = "create",
     open,
     productNames = [],
     defaultProduct,
+    selectedProduct,
     onExit = () => {},
   } = props;
 
@@ -78,10 +79,11 @@ export function ProductDrawer(props: ProductDrawerProps) {
           <DrawerDescription className="hidden" />
         </DrawerHeader>
         <div className="overflow-y-auto no-scrollbar pt-4">
-          <ProductDrawerForm
+          <ProductForm
             id={"product-form"}
             onSubmit={handleSubmit}
             productNames={productNames}
+            selectedProduct={selectedProduct}
             defaultProduct={defaultProduct}
           />
         </div>

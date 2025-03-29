@@ -1,8 +1,8 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 
-import { cn } from "@/src/lib/utils";
+import { cn, toTitleCase } from "@/src/lib/utils";
 import { Button } from "@/src/components/ui/button";
 import {
   Command,
@@ -18,20 +18,29 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { useState } from "react";
+import { CommandSeparator } from "cmdk";
+import { insertProductName } from "@/src/db/db";
 
 interface ProductTableSearchProps {
   productNames: string[];
   onProductSelected: (selectedProduct: string) => void;
+  selectedProduct: string;
 }
 
 function ProductTableSearch(props: ProductTableSearchProps) {
-  const { productNames, onProductSelected = () => {} } = props;
+  const { productNames, onProductSelected = () => {}, selectedProduct } = props;
 
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={(toggled_on) => {
+        setOpen(toggled_on);
+        setValue("");
+      }}
+    >
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -39,15 +48,17 @@ function ProductTableSearch(props: ProductTableSearchProps) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value ? value : "Select product..."}
+          {selectedProduct ? selectedProduct : "Select product..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search product..." />
+          <CommandInput
+            placeholder="Search product..."
+            onValueChange={setValue}
+          />
           <CommandList>
-            <CommandEmpty>No products found</CommandEmpty>
             <CommandGroup>
               {productNames.map((name, i) => (
                 <CommandItem
@@ -55,7 +66,6 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                   value={name}
                   onSelect={(currentValue) => {
                     const product = currentValue === value ? "" : currentValue;
-                    setValue(product);
                     onProductSelected(product);
                     setOpen(false);
                   }}
@@ -70,6 +80,24 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                 </CommandItem>
               ))}
             </CommandGroup>
+            {value != "" && !productNames.includes(toTitleCase(value)) ? (
+              <CommandGroup forceMount={true}>
+                <CommandItem
+                  forceMount={true}
+                  onSelect={async () => {
+                    let newSelected = toTitleCase(value);
+                    onProductSelected(newSelected);
+                    setOpen(false);
+                    await insertProductName(newSelected);
+                  }}
+                >
+                  <Plus />
+                  <div className="opacity-0">placholder</div>
+                </CommandItem>
+              </CommandGroup>
+            ) : (
+              ""
+            )}
           </CommandList>
         </Command>
       </PopoverContent>
