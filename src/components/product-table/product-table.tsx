@@ -198,34 +198,50 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                 }
               >
                 <TableCell>{product.store}</TableCell>
-                <TableCell>{`$${product.total_price.toFixed(2)}`}</TableCell>
-                <TableCell>{`$${product.unit_price.toFixed(2)}/${
-                  product.measurement
-                }`}</TableCell>
-                <TableCell>{`${product.quantity} ${product.measurement}${
-                  product.measurement == "lb" && product.quantity != 1
-                    ? "s"
-                    : ""
-                }`}</TableCell>
                 <TableCell>
-                  <div className="flex items-center">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${
-                          i < product.quality
-                            ? product.sale && product.sale_date
-                              ? "text-background fill-background"
-                              : "text-foreground fill-foreground"
-                            : ""
-                        }`}
-                      />
-                    ))}
-                  </div>
+                  {product.available
+                    ? `$${product.total_price.toFixed(2)}`
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {product.available
+                    ? `$${product.unit_price.toFixed(2)}/${product.measurement}`
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {product.available
+                    ? `${product.quantity} ${product.measurement}${
+                        product.measurement == "lb" && product.quantity != 1
+                          ? "s"
+                          : ""
+                      }`
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {product.available ? (
+                    <div className="flex items-center">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-3 h-3 ${
+                            i < product.quality
+                              ? product.sale && product.sale_date
+                                ? "text-background fill-background"
+                                : "text-foreground fill-foreground"
+                              : ""
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    "-"
+                  )}
                 </TableCell>
                 <TableCell>{product.date}</TableCell>
                 <TableCell>
-                  {product.sale && product.sale_date ? product.sale_date : ""}
+                  {product.available && product.sale && product.sale_date
+                    ? product.sale_date
+                    : "-"}
                 </TableCell>
                 <TableCell>
                   <ProductOptions product={product} />

@@ -15,12 +15,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { stores } from "./product-form";
 
 interface InfoGeneralProps {
   form: any;
   productNames?: string[];
 }
+
+const stores: string[] = [
+  "Albertsons",
+  "Costco",
+  "La Bonita",
+  "Smiths",
+  "Sprouts",
+  "Walmart",
+  "Whole Foods",
+  "WinCo",
+  "Trader Joes",
+  "Aldi",
+  "HMart",
+  "Grocery Outlet",
+];
 
 export default function InfoGeneral({ form, productNames }: InfoGeneralProps) {
   return (

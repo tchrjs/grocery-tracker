@@ -7,9 +7,9 @@ import React, { useState } from "react";
 import { Form } from "@/src/components/ui/form";
 import InfoSale from "./info-sale";
 import InfoTimestamp from "./info-timestamp";
-import InfoPricing from "./info-pricing";
 import InfoGeneral from "./info-general";
 import InfoAbout from "./info-about";
+import InfoAvailable from "./info-available";
 
 interface ProductFormProps {
   id: string | undefined;
@@ -22,6 +22,7 @@ interface ProductFormProps {
 export const formSchema = z.object({
   name: z.string().min(1, { message: "Required" }),
   store: z.string().min(1, { message: "Required" }),
+  available: z.boolean(),
   measurement: z.string(),
   total_price: z.string(),
   unit_price: z.string(),
@@ -31,21 +32,6 @@ export const formSchema = z.object({
   sale: z.boolean(),
   sale_date: z.coerce.date(),
 });
-
-export const stores: string[] = [
-  "Albertsons",
-  "Costco",
-  "La Bonita",
-  "Smiths",
-  "Sprouts",
-  "Walmart",
-  "Whole Foods",
-  "WinCo",
-  "Trader Joes",
-  "Aldi",
-  "HMart",
-  "Grocery Outlet",
-];
 
 function ProductForm(props: ProductFormProps) {
   const { id, onSubmit, productNames, defaultProduct, selectedProduct } = props;
@@ -59,11 +45,12 @@ function ProductForm(props: ProductFormProps) {
   const defaultValues = {
     name: defaultProduct?.name ?? selectedProduct,
     store: defaultProduct?.store ?? "",
+    available: defaultProduct?.available ?? true,
     measurement: defaultProduct?.measurement ?? "each",
     total_price: defaultProduct?.total_price.toString().toLowerCase() ?? "",
     unit_price: defaultProduct?.unit_price.toString().toLowerCase() ?? "",
     quantity: defaultProduct?.quantity.toString().toLowerCase() ?? "",
-    quality: defaultProduct?.quality.toString().toLowerCase() ?? "",
+    quality: defaultProduct?.quality ? defaultProduct?.quality.toString() : "4",
     date: new Date(),
     sale: defaultProduct?.sale ?? false,
     sale_date: saleDate ?? new Date(),
@@ -74,21 +61,25 @@ function ProductForm(props: ProductFormProps) {
     defaultValues: defaultValues,
   });
 
+  const [isAvailable, setIsAvailable] = useState(defaultValues.available);
+
   const handleSubmit = (e: z.infer<typeof formSchema>) => {
     const product: Product = {
       id: defaultProduct?.id ?? undefined,
       name: toTitleCase(e.name).trim(),
       store: e.store,
-      total_price: Number(e.total_price),
-      unit_price: Number(e.unit_price),
-      measurement: e.measurement,
-      quantity: Number(e.quantity),
-      quality: Number(e.quality),
+      available: e.available,
+      total_price: e.available ? Number(e.total_price) : 0,
+      unit_price: e.available ? Number(e.unit_price) : 0,
+      measurement: e.available ? e.measurement : "each",
+      quantity: e.available ? Number(e.quantity) : 0,
+      quality: e.available ? Number(e.quality) : 0,
       date: e.date.toDateString(),
-      sale: e.sale,
-      sale_date: e.sale
-        ? e.sale_date.toDateString()
-        : new Date().toDateString(),
+      sale: e.available ? e.sale : false,
+      sale_date:
+        e.available && e.sale
+          ? e.sale_date.toDateString()
+          : new Date().toDateString(),
     };
     onSubmit(product);
   };
@@ -101,9 +92,16 @@ function ProductForm(props: ProductFormProps) {
         onSubmit={form.handleSubmit(handleSubmit)}
       >
         <InfoGeneral form={form} productNames={productNames} />
-        <InfoAbout form={form} />
-        <InfoTimestamp form={form} />
-        <InfoSale form={form} defaultValue={defaultValues.sale} />
+        <InfoAvailable form={form} onChange={setIsAvailable} />
+        {isAvailable ? (
+          <>
+            <InfoAbout form={form} />
+            <InfoTimestamp form={form} />
+            <InfoSale form={form} defaultValue={defaultValues.sale} />
+          </>
+        ) : (
+          <></>
+        )}
       </form>
     </Form>
   );

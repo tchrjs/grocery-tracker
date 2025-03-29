@@ -13,6 +13,7 @@ export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   name: text().notNull(),
   store: text().notNull(),
+  available: boolean(),
   total_price: real().notNull(),
   unit_price: real().notNull(),
   measurement: text().notNull(),
