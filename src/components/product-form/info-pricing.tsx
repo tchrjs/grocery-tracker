@@ -66,12 +66,15 @@ export default function InfoPricing({ form }: InfoPricingProps) {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="p-2 flex flex-row items-center">
-          <Button className="flex" variant={"ghost"} asChild>
-            <DrawerClose className="flex">
-              <ArrowLeftIcon className="size-4" />
-            </DrawerClose>
-          </Button>
-          <DrawerTitle className="text-center w-full">Set Prices</DrawerTitle>
+          <div className="w-1/3">
+            <Button className="flex" variant={"ghost"} asChild>
+              <DrawerClose className="flex">
+                <ArrowLeftIcon className="size-4" />
+              </DrawerClose>
+            </Button>
+          </div>
+          <DrawerTitle className="w-1/3 text-center">Set Prices</DrawerTitle>
+          <div className="w-1/3"></div>
         </DrawerHeader>
         <div className="px-4 flex flex-col gap-4">
           <FormGroup>
