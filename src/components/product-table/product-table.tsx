@@ -112,6 +112,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead></TableHead>
             <TableHead className="min-w-35">
               <button
                 className="flex justify-between w-full items-center"
@@ -183,7 +184,6 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                 Sale End Date
               </span>
             </TableHead>
-            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -199,6 +199,9 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                     : "bg-green-500 text-background"
                 }
               >
+                <TableCell>
+                  <ProductOptions product={product} />
+                </TableCell>
                 <TableCell>{product.store}</TableCell>
                 <TableCell>
                   {product.available
@@ -244,9 +247,6 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                   {product.available && product.sale && product.sale_date
                     ? product.sale_date
                     : "-"}
-                </TableCell>
-                <TableCell>
-                  <ProductOptions product={product} />
                 </TableCell>
               </TableRow>
             ))}
