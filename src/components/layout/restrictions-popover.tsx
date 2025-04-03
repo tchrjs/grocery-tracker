@@ -5,18 +5,29 @@ import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { sendRequest } from "@/src/app/api/actions";
+import { useState } from "react";
 
-export default function RestrictionsPopover() {
+export default function RestrictionsPopover({
+  pendingRequest = false,
+}: {
+  pendingRequest: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const [requestSent, setRequestSent] = useState(pendingRequest);
+
   const handleRequest = async () => {
-    await fetch("api/route", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sentRequest: true }),
-    });
+    setOpen(false);
+    setRequestSent(true);
+    await sendRequest();
   };
 
   return (
-    <Popover>
+    <Popover
+      open={open}
+      onOpenChange={(toggled_on: boolean) => {
+        if (open != toggled_on) setOpen(toggled_on);
+      }}
+    >
       <PopoverTrigger asChild>
         <Button variant="secondary">
           <Eye />
@@ -39,12 +50,16 @@ export default function RestrictionsPopover() {
             </SignInButton>
           </SignedOut>
           <SignedIn>
+            {}
             <Button
-              className="bg-green-600 hover:bg-foreground hover:text-green-600"
+              disabled={pendingRequest || requestSent}
+              className="bg-green-600 hover:bg-foreground hover:text-green-600 disabled:hover:text-muted-foreground disabled:bg-muted"
               variant={"secondary"}
-              onClick={sendRequest}
+              onClick={handleRequest}
             >
-              Request Edit Access
+              {pendingRequest || requestSent
+                ? "Pending Request Approval"
+                : "Request Edit Access"}
             </Button>
           </SignedIn>
         </div>

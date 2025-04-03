@@ -1,3 +1,5 @@
+"use server";
+
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
 export async function sendRequest() {
