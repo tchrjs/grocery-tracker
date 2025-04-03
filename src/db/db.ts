@@ -10,8 +10,8 @@ import {
 } from "./schema";
 import { eq } from "drizzle-orm";
 
-export async function revalidate() {
-  revalidatePath("/");
+export async function revalidate(path: string) {
+  revalidatePath(path);
 }
 
 export async function getProducts(): Promise<Product[]> {

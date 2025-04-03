@@ -16,7 +16,7 @@ import { ProductOptions } from "../product-options/product-options";
 import { ArrowUp, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { removeProductName } from "@/src/db/db";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, useUser } from "@clerk/nextjs";
 import { Card } from "../ui/card";
 
 interface ProductTableProps {
@@ -31,6 +31,11 @@ function ProductTable({ products, productNames }: ProductTableProps) {
   const [isAsc, setAsc] = useState<boolean>(true);
   const [activeFilter, setActiveFilter] = useState<keyof Product>("store");
   const [filteredProducts, setFilteredProduct] = useState<Product[]>([]);
+
+  const { user } = useUser();
+  const hasAccess: boolean =
+    user?.publicMetadata.role === "admin" ||
+    user?.publicMetadata.role === "moderator";
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -103,23 +108,25 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           }}
         />
         <SignedIn>
-          <Button
-            onClick={() => {
-              setDrawerOpen(true);
-            }}
-            variant={"outline"}
-          >
-            Create Product
-          </Button>
+          {hasAccess ? (
+            <Button
+              onClick={() => {
+                setDrawerOpen(true);
+              }}
+              variant={"outline"}
+            >
+              Create Product
+            </Button>
+          ) : (
+            <></>
+          )}
         </SignedIn>
       </div>
       <Card>
         <Table>
           <TableHeader>
             <TableRow>
-              <SignedIn>
-                <TableHead></TableHead>
-              </SignedIn>
+              <SignedIn>{hasAccess ? <TableHead></TableHead> : <></>}</SignedIn>
               <TableHead className="min-w-35">
                 <button
                   className="flex justify-between w-full items-center"
@@ -219,9 +226,13 @@ function ProductTable({ products, productNames }: ProductTableProps) {
                   }
                 >
                   <SignedIn>
-                    <TableCell>
-                      <ProductOptions product={product} />
-                    </TableCell>
+                    {hasAccess ? (
+                      <TableCell>
+                        <ProductOptions product={product} />
+                      </TableCell>
+                    ) : (
+                      <></>
+                    )}
                   </SignedIn>
                   <TableCell>{product.store}</TableCell>
                   <TableCell>
