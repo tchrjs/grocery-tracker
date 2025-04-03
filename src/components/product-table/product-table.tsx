@@ -122,7 +122,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           )}
         </SignedIn>
       </div>
-      <Card>
+      <Card className="mb-4 py-2">
         <Table>
           <TableHeader>
             <TableRow>
