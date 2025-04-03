@@ -1,9 +1,11 @@
 "use client";
 
-import { HtmlHTMLAttributes, useRef, useState } from "react";
-import { Eye, RefreshCw } from "lucide-react";
+import { useRef, useState } from "react";
+import { Eye, RefreshCw, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { revalidate } from "@/src/db/db";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { SignedOut, SignedIn, SignInButton } from "@clerk/nextjs";
 
 export default function Header() {
   const [isRotating, setIsRotating] = useState(false);
@@ -31,10 +33,43 @@ export default function Header() {
           </Button>
         </div>
         <div>
-          <Button variant="secondary">
-            <Eye />
-            View Only
-          </Button>
+          <SignedOut>
+            <div className="flex items-center gap-4">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="secondary">
+                    <Eye />
+                    View Only
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end">
+                  <div className="flex flex-col gap-4">
+                    <div className="text-sm">
+                      You can only view this content. Ask owner for permission
+                      to edit.
+                    </div>
+                    <SignInButton>
+                      <Button
+                        className="bg-green-600 hover:bg-foreground hover:text-green-600"
+                        variant={"secondary"}
+                      >
+                        Request Edit Access
+                      </Button>
+                    </SignInButton>
+                  </div>
+                </PopoverContent>
+              </Popover>
+              <SignInButton>
+                <Button
+                  className="rounded-full"
+                  size={"icon"}
+                  variant={"secondary"}
+                >
+                  <User />
+                </Button>
+              </SignInButton>
+            </div>
+          </SignedOut>
         </div>
       </div>
 

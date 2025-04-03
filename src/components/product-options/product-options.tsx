@@ -48,7 +48,7 @@ function ProductOptions(props: ProductOptionsProps) {
             <EllipsisVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="translate-x-2" sideOffset={0}>
+        <DropdownMenuContent align={"start"} sideOffset={0}>
           <DropdownMenuItem
             onClick={() => {
               setDrawerOpen(true);
