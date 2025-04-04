@@ -19,7 +19,7 @@ export default async function AdminDashboard() {
   const requestedUsers =
     users?.filter(
       (user: any) =>
-        user.publicMetadata?.sentRequest !== true &&
+        user.publicMetadata?.sentRequest === true &&
         user.publicMetadata?.role == "viewer"
     ) || [];
 
