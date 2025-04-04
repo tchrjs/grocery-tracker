@@ -123,7 +123,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
           )}
         </SignedIn>
       </div>
-      <Card className="mb-4 py-2">
+      <Card className="mb-4 py-2 gap-2">
         <Table>
           <TableHeader>
             <TableRow>
@@ -293,7 +293,7 @@ function ProductTable({ products, productNames }: ProductTableProps) {
             Select a product
           </div>
         ) : filteredProducts.length <= 0 ? (
-          <div className="flex w-full justify-center items-center">
+          <div className="flex w-full justify-center items-center my-4">
             <Button
               variant={"secondary"}
               className="w-48"

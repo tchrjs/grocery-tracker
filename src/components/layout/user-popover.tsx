@@ -42,10 +42,10 @@ export default function UserPopover({ emailAddress, role }: UserPopoverProps) {
           <div className="flex flex-col gap-4">
             <div className="w-full text-center">You are not signed in</div>
             <SignInButton>
-              <Button variant={"outline"}>Sign In</Button>
+              <Button>Sign In</Button>
             </SignInButton>
             <SignUpButton>
-              <Button>Sign Up</Button>
+              <Button variant={"outline"}>Sign Up</Button>
             </SignUpButton>
           </div>
         </SignedOut>

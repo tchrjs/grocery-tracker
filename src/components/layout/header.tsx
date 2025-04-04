@@ -6,7 +6,7 @@ import RestrictionsPopover from "./restrictions-popover";
 import RevalidateButton from "./revalidate-button";
 
 export default function Header() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
 
   const hasAccess =
     user?.publicMetadata.role == "admin" ||
@@ -17,7 +17,7 @@ export default function Header() {
       <div className="flex justify-between border rounded-md p-2">
         <RevalidateButton />
         <div className="flex items-center gap-4">
-          {hasAccess ? (
+          {hasAccess || !isLoaded ? (
             <></>
           ) : (
             <RestrictionsPopover
