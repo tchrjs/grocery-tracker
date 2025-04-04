@@ -13,6 +13,7 @@ import {
 import { Separator } from "../ui/separator";
 import { toTitleCase } from "@/src/lib/utils";
 import { useState } from "react";
+import Link from "next/link";
 
 interface UserPopoverProps {
   emailAddress?: string;
@@ -58,15 +59,24 @@ export default function UserPopover({ emailAddress, role }: UserPopoverProps) {
               </div>
             )}
             <Separator />
-            <SignOutButton>
+            <div className="flex flex-col w-full gap-2">
+              <SignOutButton>
+                <Button
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </SignOutButton>
               <Button
-                onClick={() => {
-                  setOpen(false);
-                }}
+                variant={"outline"}
+                className={role == "admin" ? "" : "hidden"}
+                asChild
               >
-                Sign Out
+                <Link href={"/admin"}>Manage Users</Link>
               </Button>
-            </SignOutButton>
+            </div>
           </div>
         </SignedIn>
       </PopoverContent>

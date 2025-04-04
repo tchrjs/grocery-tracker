@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import { removeProductName } from "@/src/db/db";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { Card } from "../ui/card";
+import { cn } from "@/src/lib/utils";
 
 interface ProductTableProps {
   products: Product[];
@@ -217,13 +218,14 @@ function ProductTable({ products, productNames }: ProductTableProps) {
               filteredProducts.map((product, i) => (
                 <TableRow
                   key={i}
-                  className={
+                  className={cn(
+                    "h-[45px]",
                     !product.sale || !product.sale_date
                       ? ""
                       : currentDate > new Date(product.sale_date)
                       ? "bg-red-500 text-background"
                       : "bg-green-500 text-background"
-                  }
+                  )}
                 >
                   <SignedIn>
                     {hasAccess ? (
