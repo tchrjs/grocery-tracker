@@ -5,7 +5,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
-import { Ellipsis } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import { Product } from "@/src/db/schema";
 import { DeleteAlertDialog } from "./delete-alert-dialog";
@@ -13,7 +13,6 @@ import { useState } from "react";
 import { deleteProductById, updateProduct } from "@/src/db/db";
 import { ProductDrawer } from "../product-drawer/product-drawer";
 import { ConfirmAlertDialog } from "./confirm-alert-dialog";
-import { revalidatePath } from "next/cache";
 
 interface ProductOptionsProps {
   product: Product;
@@ -46,10 +45,10 @@ function ProductOptions(props: ProductOptionsProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant={"ghost"}>
-            <Ellipsis className="size-4" />
+            <EllipsisVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="-translate-x-2" sideOffset={0}>
+        <DropdownMenuContent align={"start"} sideOffset={0}>
           <DropdownMenuItem
             onClick={() => {
               setDrawerOpen(true);

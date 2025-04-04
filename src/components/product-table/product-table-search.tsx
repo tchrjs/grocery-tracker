@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { useState } from "react";
-import { CommandSeparator } from "cmdk";
 import { insertProductName } from "@/src/db/db";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 interface ProductTableSearchProps {
   productNames: string[];
@@ -58,6 +58,9 @@ function ProductTableSearch(props: ProductTableSearchProps) {
             placeholder="Search product..."
             onValueChange={setValue}
           />
+          <SignedOut>
+            <CommandEmpty>Product not found</CommandEmpty>
+          </SignedOut>
           <CommandList>
             <CommandGroup>
               {productNames.map((name, i) => (
@@ -80,24 +83,26 @@ function ProductTableSearch(props: ProductTableSearchProps) {
                 </CommandItem>
               ))}
             </CommandGroup>
-            {value != "" && !productNames.includes(toTitleCase(value)) ? (
-              <CommandGroup forceMount={true}>
-                <CommandItem
-                  forceMount={true}
-                  onSelect={async () => {
-                    let newSelected = toTitleCase(value);
-                    onProductSelected(newSelected);
-                    setOpen(false);
-                    await insertProductName(newSelected);
-                  }}
-                >
-                  <Plus />
-                  <div className="opacity-0">placholder</div>
-                </CommandItem>
-              </CommandGroup>
-            ) : (
-              ""
-            )}
+            <SignedIn>
+              {value != "" && !productNames.includes(toTitleCase(value)) ? (
+                <CommandGroup forceMount={true}>
+                  <CommandItem
+                    forceMount={true}
+                    onSelect={async () => {
+                      let newSelected = toTitleCase(value);
+                      onProductSelected(newSelected);
+                      setOpen(false);
+                      await insertProductName(newSelected);
+                    }}
+                  >
+                    <Plus />
+                    <div className="opacity-0">placholder</div>
+                  </CommandItem>
+                </CommandGroup>
+              ) : (
+                ""
+              )}
+            </SignedIn>
           </CommandList>
         </Command>
       </PopoverContent>

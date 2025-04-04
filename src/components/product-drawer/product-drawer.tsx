@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { ProductForm } from "../product-form/product-form";
 import { createProduct, updateProduct } from "@/src/db/db";
 import { Product } from "@/src/db/schema";
+import { useUser } from "@clerk/nextjs";
 
 interface ProductProps {
   type?: "create" | "edit";
